@@ -5,7 +5,7 @@ import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.stereotype.Service;
-import ru.outofmemory.zelixbackend.entities.UserDetails;
+import ru.outofmemory.zelixbackend.entities.UserEntity;
 
 import javax.crypto.SecretKey;
 
@@ -22,7 +22,7 @@ public class JwtService {
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
-    public String generateToken(UserDetails userEntity, boolean rememberMe) {
+    public String generateToken(UserEntity userEntity, boolean rememberMe) {
 
         Date now = new Date();
         int multiplier = rememberMe ? 14 : 1;

@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.outofmemory.zelixbackend.dto.AuthRequestDTO;
 import ru.outofmemory.zelixbackend.dto.AuthResponseDTO;
 import ru.outofmemory.zelixbackend.dto.RegisterRequestDTO;
-import ru.outofmemory.zelixbackend.entities.UserDetails;
+import ru.outofmemory.zelixbackend.entities.UserEntity;
 import ru.outofmemory.zelixbackend.services.JwtService;
 import ru.outofmemory.zelixbackend.services.UserService;
 
@@ -37,7 +37,7 @@ public class AuthController {
                     )
             );
 
-            UserDetails userEntity = userService.findByUsername(request.getUsername()).orElseThrow();
+            UserEntity userEntity = userService.findByUsername(request.getUsername()).orElseThrow();
 
             String token = jwtService.generateToken(userEntity, request.isRememberMe());
             return new AuthResponseDTO(token, userEntity.getUsername());
@@ -55,7 +55,7 @@ public class AuthController {
         userService.findByEmail(request.getEmail()).ifPresent(email -> {
             throw new RuntimeException("Аккаунт с указанной почтой уже создан");
         });
-        UserDetails userEntity = new UserDetails(request.getUsername(), passwordEncoder.encode(request.getPassword()), request.getEmail());
+        UserEntity userEntity = new UserEntity(request.getUsername(), passwordEncoder.encode(request.getPassword()), request.getEmail());
         userService.saveUser(userEntity);
         String token = jwtService.generateToken(userEntity, false);
         return new AuthResponseDTO(token, userEntity.getUsername());

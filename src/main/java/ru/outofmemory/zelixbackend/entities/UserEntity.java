@@ -13,7 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class UserDetails implements org.springframework.security.core.userdetails.UserDetails {
+public class UserEntity implements org.springframework.security.core.userdetails.UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
@@ -31,7 +31,7 @@ public class UserDetails implements org.springframework.security.core.userdetail
     @Column(name = "api_key", length = 64, unique = true)
     private String apiKey;
 
-    public UserDetails(String username, String password, String email) {
+    public UserEntity(String username, String password, String email) {
         this.username = username;
         this.password = password;
         this.email = email;
