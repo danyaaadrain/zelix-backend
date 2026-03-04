@@ -1,10 +1,10 @@
 package ru.outofmemory.zelixbackend.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@AllArgsConstructor
 @Data
+@NoArgsConstructor
 public class RegisterRequestDTO {
     private String username;
     private String password;

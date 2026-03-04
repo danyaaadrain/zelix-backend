@@ -2,7 +2,7 @@ package ru.outofmemory.zelixbackend.services;
 
 import lombok.AllArgsConstructor;
 import org.jspecify.annotations.NullMarked;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -32,7 +32,7 @@ public class UserService implements UserDetailsService {
 
     @Override
     @NullMarked
-    public org.springframework.security.core.userdetails.UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return this.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("Username not found: " + username));
     }
 }

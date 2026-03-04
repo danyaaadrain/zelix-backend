@@ -13,8 +13,8 @@ import java.util.List;
 @Entity
 @Table(name = "miners")
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 public class MinerEntity {
     @Id
     private String id;

@@ -50,10 +50,10 @@ public class AuthController {
     @PostMapping("/registration")
     public AuthResponseDTO register(@RequestBody RegisterRequestDTO request) {
         userService.findByUsername(request.getUsername()).ifPresent(user -> {
-            throw new RuntimeException("Аккаунт с указанным логином уже создан");
+            throw new RuntimeException("Аккаунт с указанным логином уже существует");
         });
         userService.findByEmail(request.getEmail()).ifPresent(email -> {
-            throw new RuntimeException("Аккаунт с указанной почтой уже создан");
+            throw new RuntimeException("Аккаунт с указанной почтой уже существует");
         });
         UserEntity userEntity = new UserEntity(request.getUsername(), passwordEncoder.encode(request.getPassword()), request.getEmail());
         userService.saveUser(userEntity);
