@@ -1,5 +1,6 @@
 package ru.outofmemory.zelixbackend.dto.miner;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -15,8 +16,10 @@ public class MinerDTO {
     public String sn;
 
     public double rate;
-    public double rate_avg;
-    public String rate_unit;
+    @JsonProperty("rate_avg")
+    public double rateAvg;
+    @JsonProperty("rate_unit")
+    public String rateUnit;
     public int[] fans = new int[4];
     public int power;
     public long uptime;

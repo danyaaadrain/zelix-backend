@@ -1,5 +1,6 @@
 package ru.outofmemory.zelixbackend.dto.miner;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -7,10 +8,17 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ChainDTO {
     public int id;
-    public int chip_count;
-    public int[] chip_temp;
-    public String chip_status;
-    public int pcb_min;
-    public int pcb_max;
-    public long hw_errors;
+
+    @JsonProperty("chip_count")
+    public int chipCount;
+    @JsonProperty("chip_temp")
+    public int[] chipTemp;
+    @JsonProperty("chip_status")
+    public String chipStatus;
+    @JsonProperty("pcb_min")
+    public int pcbMin;
+    @JsonProperty("pcb_max")
+    public int pcbMax;
+    @JsonProperty("hw_errors")
+    public long hwErrors;
 }
