@@ -23,6 +23,7 @@ public class MinerService {
             miner.setId(minerDto.getId());
             miner.setOwner(userEntity);
             miner.setMonitor(monitorEntity);
+            miner.setAlgo(minerDto.getAlgo());
 
             miner.setIp(minerDto.getIp());
             miner.setMac(minerDto.getMac());

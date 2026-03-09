@@ -1,4 +1,4 @@
-package ru.outofmemory.zelixbackend.controller;
+package ru.outofmemory.zelixbackend.exceptions;
 
 
 import org.springframework.http.HttpStatus;
@@ -16,8 +16,14 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponseDTO> handleException(Exception ex) {
+    @ExceptionHandler(IncorrectCredentialsException.class)
+    public ResponseEntity<ErrorResponseDTO> handleRuntimeException(IncorrectCredentialsException ex) {
+        ErrorResponseDTO error = new ErrorResponseDTO(ex.getMessage(), HttpStatus.UNAUTHORIZED.value());
+        return new ResponseEntity<>(error, HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(Throwable.class)
+    public ResponseEntity<ErrorResponseDTO> handleException(Throwable ex) {
         ErrorResponseDTO error = new ErrorResponseDTO("Внутренняя ошибка сервера", HttpStatus.INTERNAL_SERVER_ERROR.value());
         return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }

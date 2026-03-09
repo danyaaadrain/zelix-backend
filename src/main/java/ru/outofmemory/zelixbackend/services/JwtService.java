@@ -23,12 +23,12 @@ public class JwtService {
     }
 
     public String generateToken(UserEntity userEntity, boolean rememberMe) {
-
         Date now = new Date();
         int multiplier = rememberMe ? 14 : 1;
-        Date expiry = new Date(now.getTime() + ACCESS_TOKEN_EXPIRATION  * multiplier);
+        Date expiry = new Date(now.getTime() + ACCESS_TOKEN_EXPIRATION * multiplier);
         return Jwts.builder()
                 .subject(userEntity.getUsername())
+                .claim("version", userEntity.getTokenVersion())
                 .issuedAt(now)
                 .expiration(expiry)
                 .signWith(getSigningKey())
@@ -39,11 +39,18 @@ public class JwtService {
         return extractAllClaims(token).getSubject();
     }
 
-    public boolean isTokenValid(String token, org.springframework.security.core.userdetails.UserDetails userDetails) {
+    private int extractVerison(String token) {
+        return !extractAllClaims(token).containsKey("version") ? -1 :
+                extractAllClaims(token).get("version", Integer.class);
+    }
+
+    public boolean isTokenValid(String token, UserEntity userEntity) {
         try {
             String username = extractUsername(token);
-            return username.equals(userDetails.getUsername()) &&
-                    !isTokenExpired(token);
+            return username.equals(userEntity.getUsername())
+                    && !isTokenExpired(token)
+                    && userEntity.getTokenVersion() == extractVerison(token)
+                    && userEntity.getTokenVersion() != -1;
         } catch (JwtException e) {
             return false;
         }

@@ -3,7 +3,7 @@ package ru.outofmemory.zelixbackend.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.outofmemory.zelixbackend.dto.MonitorReportRequestDTO;
+import ru.outofmemory.zelixbackend.dto.miner.MonitorReportRequestDTO;
 import ru.outofmemory.zelixbackend.entities.MonitorEntity;
 import ru.outofmemory.zelixbackend.entities.UserEntity;
 import ru.outofmemory.zelixbackend.repos.UserRepo;

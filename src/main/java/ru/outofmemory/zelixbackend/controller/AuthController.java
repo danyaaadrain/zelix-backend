@@ -10,12 +10,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ru.outofmemory.zelixbackend.dto.AuthRequestDTO;
-import ru.outofmemory.zelixbackend.dto.AuthResponseDTO;
-import ru.outofmemory.zelixbackend.dto.RegisterRequestDTO;
+import ru.outofmemory.zelixbackend.dto.auth.AuthRequestDTO;
+import ru.outofmemory.zelixbackend.dto.auth.AuthResponseDTO;
+import ru.outofmemory.zelixbackend.dto.user.RegisterRequestDTO;
 import ru.outofmemory.zelixbackend.entities.UserEntity;
+import ru.outofmemory.zelixbackend.exceptions.IncorrectCredentialsException;
 import ru.outofmemory.zelixbackend.services.JwtService;
 import ru.outofmemory.zelixbackend.services.UserService;
+import ru.outofmemory.zelixbackend.services.Utilities;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -26,6 +28,7 @@ public class AuthController {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final UserService userService;
+    private final Utilities utilities;
 
     @PostMapping("/login")
     public AuthResponseDTO login(@RequestBody AuthRequestDTO request) {
@@ -43,11 +46,11 @@ public class AuthController {
             return new AuthResponseDTO(token, userEntity.getUsername());
 
         } catch (AuthenticationException e) {
-            throw new RuntimeException("Неверный логин или пароль");
+            throw new IncorrectCredentialsException("Неверный логин или пароль");
         }
     }
 
-    @PostMapping("/registration")
+    @PostMapping("/register")
     public AuthResponseDTO register(@RequestBody RegisterRequestDTO request) {
         userService.findByUsername(request.getUsername()).ifPresent(user -> {
             throw new RuntimeException("Аккаунт с указанным логином уже существует");
@@ -55,6 +58,9 @@ public class AuthController {
         userService.findByEmail(request.getEmail()).ifPresent(email -> {
             throw new RuntimeException("Аккаунт с указанной почтой уже существует");
         });
+        if (!utilities.isPassowrdValid(request.getPassword())) {
+            throw new RuntimeException("Пароль не удовлетворяет условиям");
+        }
         UserEntity userEntity = new UserEntity(request.getUsername(), passwordEncoder.encode(request.getPassword()), request.getEmail());
         userService.saveUser(userEntity);
         String token = jwtService.generateToken(userEntity, false);

@@ -31,10 +31,14 @@ public class UserEntity implements org.springframework.security.core.userdetails
     @Column(name = "api_key", length = 64, unique = true)
     private String apiKey;
 
+    @Column(name = "token_version")
+    private int tokenVersion;
+
     public UserEntity(String username, String password, String email) {
         this.username = username;
         this.password = password;
         this.email = email;
+        this.tokenVersion = 1;
     }
 
     @Override

@@ -27,6 +27,8 @@ public class MinerEntity {
     @JoinColumn(name = "monitor_id")
     private MonitorEntity monitor;
 
+    private String algo;
+
     private String ip;
     private String mac;
     private String type;

@@ -1,9 +1,8 @@
-package ru.outofmemory.zelixbackend.dto;
+package ru.outofmemory.zelixbackend.dto.miner;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.outofmemory.zelixbackend.dto.miner.MinerDTO;
 
 import java.util.ArrayList;
 

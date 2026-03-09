@@ -1,4 +1,4 @@
-package ru.outofmemory.zelixbackend.dto;
+package ru.outofmemory.zelixbackend.dto.auth;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;

@@ -14,6 +14,7 @@ public class MinerDTO {
     public String mac;
     public String type;
     public String sn;
+    public String algo;
 
     public double rate;
     @JsonProperty("rate_avg")
