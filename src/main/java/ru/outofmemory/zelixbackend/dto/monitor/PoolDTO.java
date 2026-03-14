@@ -1,4 +1,4 @@
-package ru.outofmemory.zelixbackend.dto.miner;
+package ru.outofmemory.zelixbackend.dto.monitor;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;

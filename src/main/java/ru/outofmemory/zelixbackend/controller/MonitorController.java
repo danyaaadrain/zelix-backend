@@ -3,7 +3,7 @@ package ru.outofmemory.zelixbackend.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.outofmemory.zelixbackend.dto.miner.MonitorReportRequestDTO;
+import ru.outofmemory.zelixbackend.dto.monitor.MonitorReportDTO;
 import ru.outofmemory.zelixbackend.entities.MonitorEntity;
 import ru.outofmemory.zelixbackend.entities.UserEntity;
 import ru.outofmemory.zelixbackend.repos.UserRepo;
@@ -19,7 +19,7 @@ public class MonitorController {
     private final UserRepo userRepo;
 
     @PostMapping("/report")
-    public ResponseEntity<?> report(@RequestBody MonitorReportRequestDTO reportRequest) {
+    public ResponseEntity<?> report(@RequestBody MonitorReportDTO reportRequest) {
         UserEntity userEntity = userRepo.findByApiKeyIgnoreCase(reportRequest.getApiKey()).orElseThrow(() ->
                 new RuntimeException("Invalid api key")
         );

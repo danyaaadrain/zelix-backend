@@ -28,7 +28,7 @@ public class PoolEntity {
     @Column(name = "last_share_time")
     private String lastShareTime;
     private double diff;
-    @JsonIgnore // TODO удалить
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "miner_id")
     private MinerEntity miner;

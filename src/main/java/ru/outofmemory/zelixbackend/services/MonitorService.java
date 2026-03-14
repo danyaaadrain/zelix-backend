@@ -3,7 +3,7 @@ package ru.outofmemory.zelixbackend.services;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.outofmemory.zelixbackend.dto.miner.MonitorReportRequestDTO;
+import ru.outofmemory.zelixbackend.dto.monitor.MonitorReportDTO;
 import ru.outofmemory.zelixbackend.entities.MonitorEntity;
 import ru.outofmemory.zelixbackend.entities.UserEntity;
 import ru.outofmemory.zelixbackend.repos.MonitorRepo;
@@ -23,7 +23,7 @@ public class MonitorService {
         return monitorEntity;
     }
 
-    public void saveMonitor(MonitorEntity monitorEntity, UserEntity owner, MonitorReportRequestDTO monitorReportRequestDTO) {
+    public void saveMonitor(MonitorEntity monitorEntity, UserEntity owner, MonitorReportDTO monitorReportRequestDTO) {
         monitorEntity.setMonitorIp(monitorReportRequestDTO.getMonitorIp());
         monitorEntity.setMonitorMac(monitorReportRequestDTO.getMonitorMac());
         monitorEntity.setUptime(monitorReportRequestDTO.getUptimeMillis());

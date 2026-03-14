@@ -1,4 +1,4 @@
-package ru.outofmemory.zelixbackend.dto.miner;
+package ru.outofmemory.zelixbackend.dto.monitor;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;

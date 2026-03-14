@@ -38,7 +38,6 @@ public class ChainEntity {
     @Column(name = "pcb_hw_errors")
     private long hwErrors;
 
-    @JsonIgnore // TODO удалить
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "miner_id")
     private MinerEntity miner;

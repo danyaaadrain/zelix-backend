@@ -1,4 +1,4 @@
-package ru.outofmemory.zelixbackend.dto.miner;
+package ru.outofmemory.zelixbackend.dto.monitor;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 @Data
 @NoArgsConstructor
-public class MonitorReportRequestDTO {
+public class MonitorReportDTO {
     @JsonProperty("monitor_uuid")
     private String monitorUuid;
     @JsonProperty("api_key")
