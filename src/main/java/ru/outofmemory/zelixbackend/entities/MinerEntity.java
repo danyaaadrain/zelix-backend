@@ -1,24 +1,28 @@
 package ru.outofmemory.zelixbackend.entities;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.UpdateTimestamp;
+import ru.outofmemory.zelixbackend.utilities.MinerAlgo;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Table(name = "miners")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
-@AllArgsConstructor
 public class MinerEntity {
     @Id
-    private String id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+
+    private UUID uuid;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "owner_id")
@@ -28,17 +32,21 @@ public class MinerEntity {
     @JoinColumn(name = "monitor_id")
     private MonitorEntity monitor;
 
-    private String algo;
+    @Enumerated(EnumType.STRING)
+    private MinerAlgo algo;
 
     private String ip;
     private String mac;
     private String type;
     private String sn;
 
-    private double rate;
-    private double rateAvg;
-    private int power;
-    private long uptime;
+    private Double rate;
+    private Double rateAvg;
+    private String rateUnit;
+    private Integer power;
+    private Long uptime;
+
+    private List<Integer> fans;
 
     @UpdateTimestamp
     @Column(name = "last_report")

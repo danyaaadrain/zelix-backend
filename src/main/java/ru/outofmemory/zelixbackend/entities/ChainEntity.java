@@ -1,10 +1,9 @@
 package ru.outofmemory.zelixbackend.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
@@ -12,18 +11,19 @@ import java.util.List;
 
 @Entity
 @Table(name = "chains")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
-@AllArgsConstructor
 public class ChainEntity {
 
     @Id
-    private String id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
 
     @Column(name = "chain_id")
-    private int chainId;
+    private Integer chainId;
     @Column(name = "chip_count")
-    private int chipCount;
+    private Integer chipCount;
 
     @Column(name = "chip_temp", columnDefinition = "jsonb")
     @JdbcTypeCode(SqlTypes.JSON)
@@ -32,11 +32,11 @@ public class ChainEntity {
     @Column(name = "chip_status")
     private String chipStatus;
     @Column(name = "pcb_temp_min")
-    private int pcbMin;
+    private Integer pcbMin;
     @Column(name = "pcb_temp_max")
-    private int pcbMax;
+    private Integer pcbMax;
     @Column(name = "pcb_hw_errors")
-    private long hwErrors;
+    private Long hwErrors;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "miner_id")

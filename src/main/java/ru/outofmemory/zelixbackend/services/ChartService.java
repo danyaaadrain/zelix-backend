@@ -2,50 +2,65 @@ package ru.outofmemory.zelixbackend.services;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.outofmemory.zelixbackend.dto.charts.ChartPoint;
-import ru.outofmemory.zelixbackend.dto.charts.SummaryChartDTO;
+import ru.outofmemory.zelixbackend.dto.chart.ChartDto;
+import ru.outofmemory.zelixbackend.dto.chart.ChartSeries;
 import ru.outofmemory.zelixbackend.entities.UserEntity;
-import ru.outofmemory.zelixbackend.entities.metrics.UserHashrateHourlyMetricsEntity;
-import ru.outofmemory.zelixbackend.repos.metrics.UserHashrateHourlyMetricsRepo;
+import ru.outofmemory.zelixbackend.entities.metrics.BaseMinerMetricEntity;
+import ru.outofmemory.zelixbackend.repos.MinerRepo;
+import ru.outofmemory.zelixbackend.utilities.ChartPeriod;
+import ru.outofmemory.zelixbackend.utilities.MinerAlgo;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class ChartService {
-    private final UserHashrateHourlyMetricsRepo userHashrateHourlyMetricsRepo;
+    private final MetricService metricService;
+    private final MinerRepo minerRepo;
 
-    private static final Map<String, String> ALGO_UNITS = Map.of(
-            "BTC", "TH/s",
-            "LTC", "GH/s"
-    );
+    public ChartDto createMinersChart(UserEntity userEntity, MinerAlgo algo, ChartPeriod period) {
+        ChartDto chartDto = new ChartDto();
+        List<BaseMinerMetricEntity> minerMetricEntities = metricService.findAllByUserAndAlgo(userEntity, period, algo);
 
+        Map<Instant, List<BaseMinerMetricEntity>> metricsByTime = minerMetricEntities.stream()
+                .collect(Collectors.groupingBy(
+                        e -> e.getCreatedAt().truncatedTo(ChronoUnit.MINUTES),
+                        TreeMap::new,
+                        Collectors.toList()));
+        chartDto.setAverageHashrate(metricService.countAverageHashrate(metricsByTime));
+        chartDto.setCurrentHashrate(minerRepo.sumRateByOwnerIdAndAlgoAndLastReportIsAfter(
+                userEntity.getId(),
+                algo,
+                Instant.now().minus(1, ChronoUnit.MINUTES)));
+        chartDto.setUnit(algo.getUnit());
+        chartDto.setTimePoints(metricsByTime.keySet());
 
-    public SummaryChartDTO getSummaryChart(UserEntity userEntity, String algo) {
-        List<UserHashrateHourlyMetricsEntity> userHashrateHourlyMetricsEntities =
-                userHashrateHourlyMetricsRepo.findAllByUserIdAndAlgo(userEntity.getId(), algo);
-        SummaryChartDTO summaryChartDto = new SummaryChartDTO();
-        summaryChartDto.setAlgo(algo);
+        ChartSeries hashrateSeries = new ChartSeries();
+        ChartSeries powerSeries = new ChartSeries();
 
-        double averageHashrate = userHashrateHourlyMetricsEntities.stream()
-                .mapToDouble(UserHashrateHourlyMetricsEntity::getHashrate)
-                .average()
-                .orElse(0.0);
+        metricsByTime.forEach((time, metrics) -> {
+            hashrateSeries.addPoint(metrics.stream().mapToDouble(BaseMinerMetricEntity::getHashrate).sum());
+            powerSeries.addPoint(metrics.stream().mapToDouble(BaseMinerMetricEntity::getPower).sum());
+        });
 
-        List<ChartPoint> chartPoints = userHashrateHourlyMetricsEntities.stream().map(userHashrateHourlyMetricsEntity ->  {
-            ChartPoint chartPoint = new ChartPoint();
-            chartPoint.setTime(userHashrateHourlyMetricsEntity.getCreatedAt());
-            chartPoint.setHashrate(userHashrateHourlyMetricsEntity.getHashrate());
-            return chartPoint;
-        }).toList();
+        hashrateSeries.setMin(hashrateSeries.getPoints().stream().mapToDouble(Number::doubleValue).min().orElse(0.0) * 0.9);
+        hashrateSeries.setMax(hashrateSeries.getPoints().stream().mapToDouble(Number::doubleValue).max().orElse(0.0) * 1.05);
+        hashrateSeries.setLabel("Хешрейт");
+        hashrateSeries.setUnit(algo.getUnit());
 
-        summaryChartDto.setAverageHashrate(BigDecimal.valueOf(averageHashrate).setScale(2, RoundingMode.HALF_UP).doubleValue());
-        summaryChartDto.setUnit(ALGO_UNITS.get(algo));
-        summaryChartDto.setPoints(chartPoints);
+        powerSeries.setMin(powerSeries.getPoints().stream().mapToDouble(Number::doubleValue).min().orElse(0.0) * 0.2);
+        powerSeries.setMax(powerSeries.getPoints().stream().mapToDouble(Number::doubleValue).max().orElse(0.0) * 8);
+        powerSeries.setLabel("Потребление");
+        powerSeries.setUnit("Вт");
 
-        return summaryChartDto;
+        chartDto.addSeries(hashrateSeries);
+        chartDto.addSeries(powerSeries);
+
+        return chartDto;
     }
 }

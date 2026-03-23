@@ -64,7 +64,6 @@ public class JwtFilter extends OncePerRequestFilter {
             body.put("timestamp", Instant.now().toString());
             body.put("status", 401);
             body.put("error", "Invalid token");
-            body.put("message", e.getMessage());
 
             objectMapper.writeValue(response.getOutputStream(), body);
             return;

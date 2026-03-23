@@ -1,33 +1,33 @@
 package ru.outofmemory.zelixbackend.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "pools")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
-@AllArgsConstructor
 public class PoolEntity {
     @Id
-    private String id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
 
     @Column(name = "pool_id")
-    private int poolId;
-    private int priority;
+    private Integer poolId;
+    private Integer priority;
     private String url;
     private String username;
     private String password;
     private String status;
-    private long accepted;
-    private long rejected;
-    private long stale;
+    private Long accepted;
+    private Long rejected;
+    private Long stale;
     @Column(name = "last_share_time")
     private String lastShareTime;
-    private double diff;
+    private Double diff;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "miner_id")
