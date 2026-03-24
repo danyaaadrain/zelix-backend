@@ -39,9 +39,8 @@ public class MinerService {
     }
 
     public void saveMiners(List<MinerDto> minersDto, UserEntity userEntity, MonitorEntity monitorEntity) {
-        Map<UUID, MinerEntity> minerEntities = minerRepo.findAllByUuidInAndOwnerId(
-                        minersDto.stream().map(MinerDto::getUuid).toList(),
-                        userEntity.getId()).stream()
+        Map<UUID, MinerEntity> minerEntities = minerRepo.findAllByMonitorIdAndOwnerId(monitorEntity.getId(), userEntity.getId())
+                .stream()
                 .collect(Collectors.toMap(MinerEntity::getUuid, minerEntity -> minerEntity));
         minersDto.forEach(minerDto -> {
             MinerEntity minerEntity = minerEntities.get(minerDto.getUuid());
@@ -93,7 +92,14 @@ public class MinerService {
             });
             minerEntity.getPools().removeIf(poolEntity -> !poolIds.contains(poolEntity.getPoolId()));
         });
-
+        List<UUID> uuids = minersDto.stream()
+                .map(MinerDto::getUuid)
+                .toList();
+        List<UUID> toDelete = minerEntities.keySet().stream()
+                .filter(uuid -> !uuids.contains(uuid))
+                .toList();
+        minerEntities.keySet().removeIf(uuid -> !uuids.contains(uuid));
+        minerRepo.deleteAllByUuidInAndOwnerId(toDelete, userEntity.getId());
         minerRepo.saveAll(minerEntities.values());
     }
 }

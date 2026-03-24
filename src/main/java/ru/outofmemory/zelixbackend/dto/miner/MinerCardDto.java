@@ -10,6 +10,7 @@ import java.util.UUID;
 public class MinerCardDto {
     private Long id;
     private UUID uuid;
+    private String name;
     private String ip;
     private String mac;
     private String type;
@@ -20,7 +21,7 @@ public class MinerCardDto {
     private Double rateAvg;
     private String rateUnit;
     private List<Integer> fans;
-    private List<Integer> chipTemps;
 
+    private List<Integer> chipTemps;
     private Boolean online;
 }

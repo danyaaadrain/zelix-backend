@@ -15,6 +15,7 @@ public interface MinerEntityMapper {
     ChainEntity toChainEntity(ChainDto chainDto);
     PoolEntity toPoolEntity(PoolDto poolDto);
 
+    @Mapping(target = "type", source = "type.name")
     MinerCardDto toMinerCardDto(MinerEntity minerEntity);
 
     @Mapping(target = "owner", ignore = true)

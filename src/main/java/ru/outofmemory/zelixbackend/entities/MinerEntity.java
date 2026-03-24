@@ -5,7 +5,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.UpdateTimestamp;
+import ru.outofmemory.zelixbackend.entities.metrics.MinerDailyMetricsEntity;
+import ru.outofmemory.zelixbackend.entities.metrics.MinerHourlyMetricsEntity;
 import ru.outofmemory.zelixbackend.utilities.MinerAlgo;
+import ru.outofmemory.zelixbackend.utilities.MinerType;
 
 import java.time.Instant;
 import java.util.ArrayList;
@@ -24,6 +27,8 @@ public class MinerEntity {
 
     private UUID uuid;
 
+    private String name;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "owner_id")
     private UserEntity owner;
@@ -37,7 +42,8 @@ public class MinerEntity {
 
     private String ip;
     private String mac;
-    private String type;
+    @Enumerated(EnumType.STRING)
+    private MinerType type;
     private String sn;
 
     private Double rate;
@@ -57,4 +63,12 @@ public class MinerEntity {
 
     @OneToMany(mappedBy = "miner", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PoolEntity> pools = new ArrayList<>();
+
+    @OneToMany(mappedBy = "miner", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<MinerHourlyMetricsEntity> hourlyMetrics;
+
+    @OneToMany(mappedBy = "miner", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<MinerDailyMetricsEntity> dailyMetrics;
+
+
 }

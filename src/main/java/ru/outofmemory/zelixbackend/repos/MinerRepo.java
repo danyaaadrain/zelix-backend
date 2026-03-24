@@ -8,10 +8,11 @@ import ru.outofmemory.zelixbackend.utilities.MinerAlgo;
 
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
-public interface MinerRepo extends JpaRepository<MinerEntity, String> {
+public interface MinerRepo extends JpaRepository<MinerEntity, Long> {
     ArrayList<MinerEntity> findAllByOwnerId(Long id);
 
     Integer countAllByOwnerId(Long ownerId);
@@ -37,6 +38,7 @@ public interface MinerRepo extends JpaRepository<MinerEntity, String> {
     );
 
 
-
+    List<MinerEntity> findAllByMonitorIdAndOwnerId(UUID monitorId, Long ownerId);
     List<MinerEntity> findAllByUuidInAndOwnerId(List<UUID> uuid, Long ownerId);
+    void deleteAllByUuidInAndOwnerId(Collection<UUID> uuids, Long ownerId);
 }

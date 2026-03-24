@@ -12,7 +12,7 @@ import ru.outofmemory.zelixbackend.services.MinerService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/miner")
+@RequestMapping("/api/miners")
 @RequiredArgsConstructor
 public class MinerController {
     private final MinerService minerService;
