@@ -39,6 +39,6 @@ public class ChainEntity {
     private Long hwErrors;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "miner_id")
+    @JoinColumn(name = "miner_id", nullable = false)
     private MinerEntity miner;
 }

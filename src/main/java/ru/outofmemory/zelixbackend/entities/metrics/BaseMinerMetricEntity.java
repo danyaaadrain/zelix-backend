@@ -19,11 +19,11 @@ public class BaseMinerMetricEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "miner_id")
+    @JoinColumn(name = "miner_id", nullable = false)
     private MinerEntity miner;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "owner_id")
+    @JoinColumn(name = "owner_id", nullable = false)
     private UserEntity owner;
 
     @CreationTimestamp()

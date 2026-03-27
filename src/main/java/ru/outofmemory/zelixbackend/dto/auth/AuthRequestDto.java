@@ -8,5 +8,5 @@ import lombok.NoArgsConstructor;
 public class AuthRequestDto {
     private String username;
     private String password;
-    private boolean rememberMe;
+    private boolean remember;
 }

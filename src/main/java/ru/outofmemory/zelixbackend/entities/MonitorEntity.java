@@ -16,11 +16,11 @@ import java.util.UUID;
 @NoArgsConstructor
 public class MonitorEntity {
     @Id
-    @Column(name = "id")
+    @Column(name = "id", nullable = false)
     private UUID id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "owner_id")
+    @JoinColumn(name = "owner_id", nullable = false)
     private UserEntity owner;
 
     @UpdateTimestamp

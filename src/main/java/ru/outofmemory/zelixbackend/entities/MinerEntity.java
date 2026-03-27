@@ -30,11 +30,11 @@ public class MinerEntity {
     private String name;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "owner_id")
+    @JoinColumn(name = "owner_id", nullable = false)
     private UserEntity owner;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "monitor_id")
+    @JoinColumn(name = "monitor_id", nullable = false)
     private MonitorEntity monitor;
 
     @Enumerated(EnumType.STRING)

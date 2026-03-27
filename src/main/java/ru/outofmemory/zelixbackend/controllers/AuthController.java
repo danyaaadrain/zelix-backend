@@ -42,7 +42,7 @@ public class AuthController {
 
             UserEntity userEntity = userService.findByUsername(request.getUsername()).orElseThrow();
 
-            String token = jwtService.generateToken(userEntity, request.isRememberMe());
+            String token = jwtService.generateToken(userEntity, request.isRemember());
             return new AuthResponseDto(token, userEntity.getUsername());
 
         } catch (AuthenticationException e) {

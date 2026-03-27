@@ -1,14 +1,12 @@
 package ru.outofmemory.zelixbackend.utilities;
 
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
+@Getter
+@RequiredArgsConstructor
 public enum MinerType {
     ANTMINER_L9("Antminer L9");
 
-    @Getter
     private final String name;
-
-    MinerType(String s) {
-        this.name = s;
-    }
 }

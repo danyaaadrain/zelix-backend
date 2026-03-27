@@ -35,11 +35,4 @@ public class Utilities {
         return String.format("%064x", new BigInteger(1, digest));
     }
 
-    public String getUnitByAlgo(String algo) {
-        return switch (algo) {
-            case "BTC" -> "TH/s";
-            case "LTC" -> "GH/s";
-            default -> throw new IllegalArgumentException("Unknown algo: " + algo);
-        };
-    }
 }

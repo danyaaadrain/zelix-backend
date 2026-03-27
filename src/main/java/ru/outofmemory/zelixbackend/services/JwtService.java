@@ -9,12 +9,13 @@ import ru.outofmemory.zelixbackend.entities.UserEntity;
 
 import javax.crypto.SecretKey;
 
+import java.time.Duration;
 import java.util.Date;
 
 @Service
 public class JwtService {
 
-    private static final long ACCESS_TOKEN_EXPIRATION = 1000 * 60 * 60 * 24;
+    private static final long ACCESS_TOKEN_EXPIRATION = Duration.ofDays(1).toMillis();
 
     private SecretKey getSigningKey() {
         String SECRET = "a8520900d3b97015cff1607d20b57b78c59600563f20dff4e4648cecb1b566f6";

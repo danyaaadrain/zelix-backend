@@ -30,6 +30,6 @@ public class PoolEntity {
     private Double diff;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "miner_id")
+    @JoinColumn(name = "miner_id", nullable = false)
     private MinerEntity miner;
 }
