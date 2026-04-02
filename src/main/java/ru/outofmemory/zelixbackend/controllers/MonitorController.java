@@ -1,16 +1,11 @@
 package ru.outofmemory.zelixbackend.controllers;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ru.outofmemory.zelixbackend.dto.monitor.MonitorReportDto;
-import ru.outofmemory.zelixbackend.entities.MonitorEntity;
-import ru.outofmemory.zelixbackend.entities.UserEntity;
 import ru.outofmemory.zelixbackend.services.MinerService;
 import ru.outofmemory.zelixbackend.services.MonitorService;
+import ru.outofmemory.zelixbackend.services.UserService;
 
 @RestController
 @RequestMapping("/api/monitor")
@@ -18,15 +13,14 @@ import ru.outofmemory.zelixbackend.services.MonitorService;
 public class MonitorController {
     private final MinerService minerService;
     private final MonitorService monitorService;
+    private final UserService userService;
 
     @PostMapping("/report")
-    public ResponseEntity<?> report(@RequestBody MonitorReportDto reportRequest) {
-        UserEntity userEntity = monitorService.findUserByApiKey(reportRequest.getApiToken());
-        MonitorEntity monitorEntity = monitorService.getMonitorByUuid(reportRequest.getMonitorUuid());
+    public void report(@RequestHeader("X-Api-Token") String apiToken, @RequestBody MonitorReportDto reportRequest) {
+        var userEntity = userService.findUserByApiKey(apiToken);
+        var monitorEntity = monitorService.getMonitorByUuidAndOwnerId(reportRequest.getMonitorUuid(), userEntity.getId());
 
         monitorService.saveMonitor(monitorEntity, userEntity, reportRequest);
         minerService.saveMiners(reportRequest.getMiners(), userEntity, monitorEntity);
-
-        return ResponseEntity.ok().build();
     }
 }

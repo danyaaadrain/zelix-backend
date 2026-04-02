@@ -1,11 +1,9 @@
-package ru.outofmemory.zelixbackend.entities;
+package ru.outofmemory.zelixbackend.entities.miner;
 
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.type.SqlTypes;
 
 import java.util.List;
 
@@ -25,8 +23,7 @@ public class ChainEntity {
     @Column(name = "chip_count")
     private Integer chipCount;
 
-    @Column(name = "chip_temp", columnDefinition = "jsonb")
-    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(name = "chip_temp")
     private List<Integer> chipTemp;
 
     @Column(name = "chip_status")
@@ -41,4 +38,16 @@ public class ChainEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "miner_id", nullable = false)
     private MinerEntity miner;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ChainEntity that)) return false;
+        return id != null && id.equals(that.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return id != null ? id.hashCode() : 0;
+    }
 }

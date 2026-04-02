@@ -4,12 +4,15 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.outofmemory.zelixbackend.dto.mapper.MinerEntityMapper;
+import ru.outofmemory.zelixbackend.dto.mapper.ZelixMapper;
 import ru.outofmemory.zelixbackend.dto.miner.MinerCardDto;
 import ru.outofmemory.zelixbackend.dto.monitor.ChainDto;
 import ru.outofmemory.zelixbackend.dto.monitor.MinerDto;
 import ru.outofmemory.zelixbackend.dto.monitor.PoolDto;
 import ru.outofmemory.zelixbackend.entities.*;
+import ru.outofmemory.zelixbackend.entities.miner.ChainEntity;
+import ru.outofmemory.zelixbackend.entities.miner.MinerEntity;
+import ru.outofmemory.zelixbackend.entities.miner.PoolEntity;
 import ru.outofmemory.zelixbackend.repos.MinerRepo;
 
 import java.time.Instant;
@@ -23,11 +26,11 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class MinerService {
     private final MinerRepo minerRepo;
-    private final MinerEntityMapper minerEntityMapper;
+    private final ZelixMapper zelixMapper;
 
     public List<MinerCardDto> getMinersCards(UserEntity userEntity) {
         return minerRepo.findAllByOwnerId(userEntity.getId()).stream().map(minerEntity -> {
-            MinerCardDto minerCardDto = minerEntityMapper.toMinerCardDto(minerEntity);
+            MinerCardDto minerCardDto = zelixMapper.toMinerCardDto(minerEntity);
             minerCardDto.setOnline(minerEntity.getLastReport().isAfter(Instant.now().minus(1, ChronoUnit.MINUTES)));
             List<Integer> chipTemps = minerEntity.getChains().stream()
                     .sorted(Comparator.comparing(ChainEntity::getChainId))
@@ -50,7 +53,7 @@ public class MinerService {
                 minerEntity.setMonitor(monitorEntity);
                 minerEntities.put(minerDto.getUuid(), minerEntity);
             }
-            minerEntityMapper.updateMiner(minerDto, minerEntity);
+            zelixMapper.updateMiner(minerDto, minerEntity);
             MonitorEntity minerMonitor = minerEntity.getMonitor();
             if (minerMonitor != null && minerMonitor.getId() != null && !minerMonitor.getId().equals(monitorEntity.getId())) {
                 log.warn("User={} trying to update miner with uuid={} from monitor={}, but miner owned by monitor={}",
@@ -67,9 +70,9 @@ public class MinerService {
             minerDto.getChains().forEach(chainDto -> {
                 ChainEntity chainEntity = chainEntities.get(chainDto.getChainId());
                 if (chainEntity != null) {
-                    minerEntityMapper.updateChain(chainDto, chainEntity);
+                    zelixMapper.updateChain(chainDto, chainEntity);
                 } else {
-                    chainEntity = minerEntityMapper.toChainEntity(chainDto);
+                    chainEntity = zelixMapper.toChainEntity(chainDto);
                     chainEntity.setMiner(finalChainMinerEntity);
                     finalChainMinerEntity.getChains().add(chainEntity);
                 }
@@ -83,9 +86,9 @@ public class MinerService {
             minerDto.getPools().forEach(poolDto -> {
                 PoolEntity poolEntity = poolEntities.get(poolDto.getPoolId());
                 if (poolEntity != null) {
-                    minerEntityMapper.updatePool(poolDto, poolEntity);
+                    zelixMapper.updatePool(poolDto, poolEntity);
                 } else {
-                    poolEntity = minerEntityMapper.toPoolEntity(poolDto);
+                    poolEntity = zelixMapper.toPoolEntity(poolDto);
                     poolEntity.setMiner(finalPoolMinerEntity);
                     finalPoolMinerEntity.getPools().add(poolEntity);
                 }

@@ -11,14 +11,11 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+import ru.outofmemory.zelixbackend.dto.ErrorResponseDto;
 import ru.outofmemory.zelixbackend.entities.UserEntity;
 import ru.outofmemory.zelixbackend.services.JwtService;
 import ru.outofmemory.zelixbackend.services.UserService;
 import tools.jackson.databind.ObjectMapper;
-
-import java.time.Instant;
-import java.util.HashMap;
-import java.util.Map;
 
 @Component
 @RequiredArgsConstructor
@@ -49,7 +46,6 @@ public class JwtFilter extends OncePerRequestFilter {
             if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 UserEntity user = userService.loadUserByUsername(username);
                 if (!jwtService.isTokenValid(token, user)) {
-                    /*filterChain.doFilter(request, response);*/
                     throw new Throwable();
                 }
                 UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
@@ -60,12 +56,11 @@ public class JwtFilter extends OncePerRequestFilter {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.setContentType("application/json");
 
-            Map<String, Object> body = new HashMap<>();
-            body.put("timestamp", Instant.now().toString());
-            body.put("status", 401);
-            body.put("error", "Invalid token");
+            ErrorResponseDto errorResponseDto = new ErrorResponseDto();
+            errorResponseDto.setMessage("Invalid token");
+            errorResponseDto.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 
-            objectMapper.writeValue(response.getOutputStream(), body);
+            objectMapper.writeValue(response.getOutputStream(), errorResponseDto);
             return;
         }
 

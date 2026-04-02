@@ -1,9 +1,10 @@
 package ru.outofmemory.zelixbackend.repos;
 
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import ru.outofmemory.zelixbackend.entities.MinerEntity;
+import ru.outofmemory.zelixbackend.entities.miner.MinerEntity;
 import ru.outofmemory.zelixbackend.utilities.MinerAlgo;
 
 import java.time.Instant;
@@ -37,8 +38,10 @@ public interface MinerRepo extends JpaRepository<MinerEntity, Long> {
             @Param("afterTime") Instant afterTime
     );
 
-
+    @EntityGraph(attributePaths = {"chains", "pools"})
     List<MinerEntity> findAllByMonitorIdAndOwnerId(UUID monitorId, Long ownerId);
     List<MinerEntity> findAllByUuidInAndOwnerId(List<UUID> uuid, Long ownerId);
+    List<MinerEntity> findAllByIdInAndOwnerId(List<Long> ids, Long ownerId);
     void deleteAllByUuidInAndOwnerId(Collection<UUID> uuids, Long ownerId);
+    void deleteAllByIdInAndOwnerId(Collection<Long> ids, Long ownerId);
 }

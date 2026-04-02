@@ -5,15 +5,19 @@ import ru.outofmemory.zelixbackend.dto.miner.MinerCardDto;
 import ru.outofmemory.zelixbackend.dto.monitor.ChainDto;
 import ru.outofmemory.zelixbackend.dto.monitor.MinerDto;
 import ru.outofmemory.zelixbackend.dto.monitor.PoolDto;
-import ru.outofmemory.zelixbackend.entities.ChainEntity;
-import ru.outofmemory.zelixbackend.entities.MinerEntity;
-import ru.outofmemory.zelixbackend.entities.PoolEntity;
+import ru.outofmemory.zelixbackend.dto.task.TaskResponseDto;
+import ru.outofmemory.zelixbackend.entities.miner.ChainEntity;
+import ru.outofmemory.zelixbackend.entities.miner.MinerEntity;
+import ru.outofmemory.zelixbackend.entities.miner.MinerTaskEntity;
+import ru.outofmemory.zelixbackend.entities.miner.PoolEntity;
 
 @Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE, componentModel = "spring")
-public interface MinerEntityMapper {
-    MinerEntity toMinerEntity(MinerDto minerEntityDto);
+public interface ZelixMapper {
     ChainEntity toChainEntity(ChainDto chainDto);
     PoolEntity toPoolEntity(PoolDto poolDto);
+
+
+    TaskResponseDto toTaskResponseDto(MinerTaskEntity minerTaskEntity);
 
     @Mapping(target = "type", source = "type.name")
     MinerCardDto toMinerCardDto(MinerEntity minerEntity);

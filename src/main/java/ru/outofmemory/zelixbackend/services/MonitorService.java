@@ -7,7 +7,6 @@ import ru.outofmemory.zelixbackend.dto.monitor.MonitorReportDto;
 import ru.outofmemory.zelixbackend.entities.MonitorEntity;
 import ru.outofmemory.zelixbackend.entities.UserEntity;
 import ru.outofmemory.zelixbackend.repos.MonitorRepo;
-import ru.outofmemory.zelixbackend.repos.UserRepo;
 
 import java.util.UUID;
 
@@ -17,16 +16,8 @@ import java.util.UUID;
 public class MonitorService {
     private final MonitorRepo monitorRepo;
 
-    private final UserRepo userRepo;
-
-    public UserEntity findUserByApiKey(String apiKey) {
-        return userRepo.findByApiKeyIgnoreCase(apiKey).orElseThrow(() ->
-                new RuntimeException("Invalid api key")
-        );
-    }
-
-    public MonitorEntity getMonitorByUuid(UUID uuid) {
-        MonitorEntity monitorEntity = monitorRepo.findById(uuid).orElseGet(MonitorEntity::new);
+    public MonitorEntity getMonitorByUuidAndOwnerId(UUID uuid, Long id) {
+        MonitorEntity monitorEntity = monitorRepo.findByIdAndOwnerId(uuid, id).orElseGet(MonitorEntity::new);
         monitorEntity.setId(uuid);
         return monitorEntity;
     }

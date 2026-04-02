@@ -1,19 +1,19 @@
-package ru.outofmemory.zelixbackend.entities;
+package ru.outofmemory.zelixbackend.entities.miner;
 
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.UpdateTimestamp;
+import ru.outofmemory.zelixbackend.entities.MonitorEntity;
+import ru.outofmemory.zelixbackend.entities.UserEntity;
 import ru.outofmemory.zelixbackend.entities.metrics.MinerDailyMetricsEntity;
 import ru.outofmemory.zelixbackend.entities.metrics.MinerHourlyMetricsEntity;
 import ru.outofmemory.zelixbackend.utilities.MinerAlgo;
 import ru.outofmemory.zelixbackend.utilities.MinerType;
 
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Entity
 @Table(name = "miners")
@@ -59,16 +59,17 @@ public class MinerEntity {
     private Instant lastReport;
 
     @OneToMany(mappedBy = "miner", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ChainEntity> chains = new ArrayList<>();
+    private Set<ChainEntity> chains = new HashSet<>();
 
     @OneToMany(mappedBy = "miner", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<PoolEntity> pools = new ArrayList<>();
+    private Set<PoolEntity> pools = new HashSet<>();
 
     @OneToMany(mappedBy = "miner", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<MinerHourlyMetricsEntity> hourlyMetrics;
+    private List<MinerTaskEntity> tasks = new ArrayList<>();
 
     @OneToMany(mappedBy = "miner", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<MinerDailyMetricsEntity> dailyMetrics;
+    private List<MinerHourlyMetricsEntity> hourlyMetrics = new ArrayList<>();
 
-
+    @OneToMany(mappedBy = "miner", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<MinerDailyMetricsEntity> dailyMetrics = new ArrayList<>();
 }

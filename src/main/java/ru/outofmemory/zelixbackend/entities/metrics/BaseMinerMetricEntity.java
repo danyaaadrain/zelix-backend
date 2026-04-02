@@ -3,7 +3,7 @@ package ru.outofmemory.zelixbackend.entities.metrics;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
-import ru.outofmemory.zelixbackend.entities.MinerEntity;
+import ru.outofmemory.zelixbackend.entities.miner.MinerEntity;
 import ru.outofmemory.zelixbackend.entities.UserEntity;
 import ru.outofmemory.zelixbackend.utilities.MinerAlgo;
 

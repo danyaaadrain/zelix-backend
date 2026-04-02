@@ -19,6 +19,13 @@ public class UserService implements UserDetailsService {
     private final UserRepo userRepo;
     private final PasswordEncoder passwordEncoder;
 
+    public UserEntity findUserByApiKey(String apiKey) {
+        return userRepo.findByApiKeyIgnoreCase(apiKey).orElseThrow(() ->
+                new RuntimeException("Invalid API token")
+        );
+    }
+
+
     public void saveUser(UserEntity user) {
         userRepo.save(user);
     }

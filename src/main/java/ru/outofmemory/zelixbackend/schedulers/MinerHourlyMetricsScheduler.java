@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.outofmemory.zelixbackend.entities.MinerEntity;
+import ru.outofmemory.zelixbackend.entities.miner.MinerEntity;
 import ru.outofmemory.zelixbackend.entities.metrics.MinerHourlyMetricsEntity;
 import ru.outofmemory.zelixbackend.repos.MinerRepo;
 import ru.outofmemory.zelixbackend.repos.metrics.MinerHourlyMetricsRepo;
