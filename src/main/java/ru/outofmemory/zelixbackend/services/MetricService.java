@@ -33,7 +33,6 @@ public class MetricService {
         return switch (period) {
             case HOURLY -> new ArrayList<>(minerHourlyMetricsRepo.findAllByOwnerId(userEntity.getId()));
             case DAILY -> new ArrayList<>(minerDailyMetricsRepo.findAllByOwnerId(userEntity.getId()));
-            default -> throw new IllegalArgumentException("Invalid period: " + period);
         };
     }
 
@@ -41,7 +40,6 @@ public class MetricService {
         return switch (period) {
             case HOURLY -> new ArrayList<>(minerHourlyMetricsRepo.findAllByOwnerIdAndAlgo(userEntity.getId(), algo));
             case DAILY -> new ArrayList<>(minerDailyMetricsRepo.findAllByOwnerIdAndAlgo(userEntity.getId(), algo));
-            default -> throw new IllegalArgumentException("Invalid period: " + period);
         };
     }
 

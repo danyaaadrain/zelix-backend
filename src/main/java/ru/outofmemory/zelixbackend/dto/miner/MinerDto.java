@@ -1,16 +1,20 @@
-package ru.outofmemory.zelixbackend.dto.monitor;
+package ru.outofmemory.zelixbackend.dto.miner;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import ru.outofmemory.zelixbackend.utilities.MinerAlgo;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Data
 @NoArgsConstructor
 public class MinerDto {
+    private Long id;
+    private String name;
+
     private UUID uuid;
     private String ip;
     private String mac;
@@ -25,6 +29,8 @@ public class MinerDto {
     private int power;
     private long uptime;
 
-    private List<ChainDto> chains = new ArrayList<>();
-    private List<PoolDto> pools = new ArrayList<>();
+    private Set<ChainDto> chains = new HashSet<>();
+    private Set<PoolDto> pools = new HashSet<>();
+
+    private Boolean online;
 }

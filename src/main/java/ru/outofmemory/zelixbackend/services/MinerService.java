@@ -5,11 +5,12 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.outofmemory.zelixbackend.dto.mapper.ZelixMapper;
+import ru.outofmemory.zelixbackend.dto.miner.ChainDto;
 import ru.outofmemory.zelixbackend.dto.miner.MinerCardDto;
-import ru.outofmemory.zelixbackend.dto.monitor.ChainDto;
-import ru.outofmemory.zelixbackend.dto.monitor.MinerDto;
-import ru.outofmemory.zelixbackend.dto.monitor.PoolDto;
-import ru.outofmemory.zelixbackend.entities.*;
+import ru.outofmemory.zelixbackend.dto.miner.MinerDto;
+import ru.outofmemory.zelixbackend.dto.miner.PoolDto;
+import ru.outofmemory.zelixbackend.entities.MonitorEntity;
+import ru.outofmemory.zelixbackend.entities.UserEntity;
 import ru.outofmemory.zelixbackend.entities.miner.ChainEntity;
 import ru.outofmemory.zelixbackend.entities.miner.MinerEntity;
 import ru.outofmemory.zelixbackend.entities.miner.PoolEntity;
@@ -28,8 +29,22 @@ public class MinerService {
     private final MinerRepo minerRepo;
     private final ZelixMapper zelixMapper;
 
-    public List<MinerCardDto> getMinersCards(UserEntity userEntity) {
-        return minerRepo.findAllByOwnerId(userEntity.getId()).stream().map(minerEntity -> {
+    public List<MinerCardDto> getMinersCards(UserEntity userEntity, String q) {
+        List<MinerEntity> minerEntities;
+        if (q != null) {
+            Long id = null;
+            try {
+                id =  Long.parseLong(q);
+            } catch (Exception ignored) {
+
+            }
+            minerEntities = minerRepo.searchByNameOrIdOrIp(userEntity.getId(), q, id);
+        } else {
+            minerEntities = minerRepo.findAllByOwnerId(userEntity.getId());
+        }
+
+
+        return minerEntities.stream().map(minerEntity -> {
             MinerCardDto minerCardDto = zelixMapper.toMinerCardDto(minerEntity);
             minerCardDto.setOnline(minerEntity.getLastReport().isAfter(Instant.now().minus(1, ChronoUnit.MINUTES)));
             List<Integer> chipTemps = minerEntity.getChains().stream()
@@ -39,6 +54,14 @@ public class MinerService {
             minerCardDto.setChipTemps(chipTemps);
             return minerCardDto;
         }).toList();
+    }
+
+    public MinerDto getMiner(UserEntity userEntity, Long id) {
+        MinerEntity minerEntity = minerRepo.findByIdAndOwnerId(id, userEntity.getId()).orElseThrow(() -> new RuntimeException("Miner with id=" + id + " not found"));
+        MinerDto minerDto = zelixMapper.toMinerDto(minerEntity);
+        minerDto.setOnline(minerEntity.getLastReport().isAfter(Instant.now().minus(1, ChronoUnit.MINUTES)));
+
+        return minerDto;
     }
 
     public void saveMiners(List<MinerDto> minersDto, UserEntity userEntity, MonitorEntity monitorEntity) {

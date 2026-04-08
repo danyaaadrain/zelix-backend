@@ -8,10 +8,7 @@ import ru.outofmemory.zelixbackend.entities.miner.MinerEntity;
 import ru.outofmemory.zelixbackend.utilities.MinerAlgo;
 
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public interface MinerRepo extends JpaRepository<MinerEntity, Long> {
     ArrayList<MinerEntity> findAllByOwnerId(Long id);
@@ -38,10 +35,27 @@ public interface MinerRepo extends JpaRepository<MinerEntity, Long> {
             @Param("afterTime") Instant afterTime
     );
 
+    @Query("""
+                SELECT m
+                FROM MinerEntity m
+                WHERE m.owner.id = :ownerId
+                  AND (
+                        (m.name IS NOT NULL AND LOWER(m.name) LIKE LOWER(CONCAT('%', :q, '%')))
+                        OR LOWER(m.ip) LIKE LOWER(CONCAT('%', :q, '%'))
+                        OR (:id IS NOT NULL AND m.id = :id)
+                  )
+            """)
+    List<MinerEntity> searchByNameOrIdOrIp(Long ownerId, String q, Long id);
+
+
     @EntityGraph(attributePaths = {"chains", "pools"})
     List<MinerEntity> findAllByMonitorIdAndOwnerId(UUID monitorId, Long ownerId);
-    List<MinerEntity> findAllByUuidInAndOwnerId(List<UUID> uuid, Long ownerId);
+
+    @EntityGraph(attributePaths = {"chains", "pools"})
+    Optional<MinerEntity> findByIdAndOwnerId(Long id, Long ownerId);
+
     List<MinerEntity> findAllByIdInAndOwnerId(List<Long> ids, Long ownerId);
+
     void deleteAllByUuidInAndOwnerId(Collection<UUID> uuids, Long ownerId);
-    void deleteAllByIdInAndOwnerId(Collection<Long> ids, Long ownerId);
+
 }

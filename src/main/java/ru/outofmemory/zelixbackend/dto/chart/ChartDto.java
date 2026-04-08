@@ -16,8 +16,4 @@ public class ChartDto {
     private Double currentHashrate;
     private String unit;
     private List<ChartSeries> series = new ArrayList<>();
-
-    public void addSeries(ChartSeries chartSeries) {
-        series.add(chartSeries);
-    }
 }

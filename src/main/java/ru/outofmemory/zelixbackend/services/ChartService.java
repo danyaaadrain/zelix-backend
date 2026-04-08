@@ -58,8 +58,8 @@ public class ChartService {
         powerSeries.setLabel("Потребление");
         powerSeries.setUnit("Вт");
 
-        chartDto.addSeries(hashrateSeries);
-        chartDto.addSeries(powerSeries);
+        chartDto.getSeries().add(hashrateSeries);
+        chartDto.getSeries().add(powerSeries);
 
         return chartDto;
     }
