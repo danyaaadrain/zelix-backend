@@ -28,6 +28,7 @@ public interface ZelixMapper {
     @Mapping(target = "chains", ignore = true)
     @Mapping(target = "pools", ignore = true)
     @Mapping(target = "id", ignore = true)
+    @Mapping(target = "name", ignore = true)
     void updateMiner(MinerDto dto, @MappingTarget MinerEntity entity);
     void updateChain(ChainDto chainDto, @MappingTarget ChainEntity entity);
     void updatePool(PoolDto poolDto, @MappingTarget PoolEntity entity);

@@ -14,6 +14,7 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
@@ -33,10 +34,11 @@ public class ChartService {
                         TreeMap::new,
                         Collectors.toList()));
         chartDto.setAverageHashrate(metricService.countAverageHashrate(metricsByTime));
-        chartDto.setCurrentHashrate(minerRepo.sumRateByOwnerIdAndAlgoAndLastReportIsAfter(
+        Double currentHashrate = minerRepo.sumRateByOwnerIdAndAlgoAndLastReportIsAfter(
                 userEntity.getId(),
                 algo,
-                Instant.now().minus(1, ChronoUnit.MINUTES)));
+                Instant.now().minus(1, ChronoUnit.MINUTES));
+        chartDto.setCurrentHashrate(Objects.requireNonNullElse(currentHashrate, 0.0));
         chartDto.setUnit(algo.getUnit());
         chartDto.setTimePoints(metricsByTime.keySet());
 
