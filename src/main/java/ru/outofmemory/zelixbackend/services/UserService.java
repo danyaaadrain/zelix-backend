@@ -25,7 +25,6 @@ public class UserService implements UserDetailsService {
         );
     }
 
-
     public void saveUser(UserEntity user) {
         userRepo.save(user);
     }

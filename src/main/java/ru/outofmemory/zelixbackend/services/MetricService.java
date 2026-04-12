@@ -26,15 +26,8 @@ import java.util.Map;
 public class MetricService {
     private final MinerHourlyMetricsRepo minerHourlyMetricsRepo;
     private final MinerDailyMetricsRepo minerDailyMetricsRepo;
-
     private final MinerRepo minerRepo;
 
-    public List<BaseMinerMetricEntity> getMetricsByUser(UserEntity userEntity, ChartPeriod period) {
-        return switch (period) {
-            case HOURLY -> new ArrayList<>(minerHourlyMetricsRepo.findAllByOwnerId(userEntity.getId()));
-            case DAILY -> new ArrayList<>(minerDailyMetricsRepo.findAllByOwnerId(userEntity.getId()));
-        };
-    }
 
     public List<BaseMinerMetricEntity> findAllByUserAndAlgo(UserEntity userEntity, ChartPeriod period, MinerAlgo algo) {
         return switch (period) {

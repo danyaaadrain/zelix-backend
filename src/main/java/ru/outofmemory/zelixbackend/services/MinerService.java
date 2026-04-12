@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.outofmemory.zelixbackend.dto.mapper.ZelixMapper;
+import ru.outofmemory.zelixbackend.dto.ZelixMapper;
 import ru.outofmemory.zelixbackend.dto.miner.ChainDto;
 import ru.outofmemory.zelixbackend.dto.miner.MinerCardDto;
 import ru.outofmemory.zelixbackend.dto.miner.MinerDto;

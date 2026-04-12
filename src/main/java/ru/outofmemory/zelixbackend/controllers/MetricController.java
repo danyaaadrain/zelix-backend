@@ -10,17 +10,17 @@ import ru.outofmemory.zelixbackend.utilities.ChartPeriod;
 import ru.outofmemory.zelixbackend.utilities.MinerAlgo;
 
 @RestController
-@RequestMapping("/api/chart")
+@RequestMapping("/api")
 @RequiredArgsConstructor
-public class ChartController {
+public class MetricController {
     private final ChartService chartService;
 
-    @GetMapping
+    @GetMapping("/metrics")
     public ChartDto chart(@AuthenticationPrincipal UserEntity userEntity, @RequestParam MinerAlgo algo, @RequestParam ChartPeriod period) {
         return chartService.createMinersChart(userEntity, algo, period);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/miners/{id}/metrics")
     public ChartDto chartById(@AuthenticationPrincipal UserEntity userEntity, @PathVariable String id) {
         return new ChartDto();
     }

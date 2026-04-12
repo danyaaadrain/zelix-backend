@@ -43,6 +43,7 @@ public class MinerDailyMetricsScheduler {
             minerDailyMetricsEntity.setOwner(minerEntity.getOwner());
             minerDailyMetricsEntity.setAlgo(minerEntity.getAlgo());
             minerDailyMetricsEntity.setPower(minerEntity.getPower());
+            minerDailyMetricsEntity.setCreatedAt(Instant.now());
 
             double avg = metrics.stream()
                     .mapToDouble(MinerHourlyMetricsEntity::getHashrate)

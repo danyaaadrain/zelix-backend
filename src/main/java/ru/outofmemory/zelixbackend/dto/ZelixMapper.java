@@ -1,18 +1,33 @@
-package ru.outofmemory.zelixbackend.dto.mapper;
+package ru.outofmemory.zelixbackend.dto;
 
 import org.mapstruct.*;
-import ru.outofmemory.zelixbackend.dto.miner.MinerCardDto;
 import ru.outofmemory.zelixbackend.dto.miner.ChainDto;
+import ru.outofmemory.zelixbackend.dto.miner.MinerCardDto;
 import ru.outofmemory.zelixbackend.dto.miner.MinerDto;
 import ru.outofmemory.zelixbackend.dto.miner.PoolDto;
 import ru.outofmemory.zelixbackend.dto.task.TaskResponseDto;
+import ru.outofmemory.zelixbackend.dto.template.PoolTemplateDto;
 import ru.outofmemory.zelixbackend.entities.miner.ChainEntity;
 import ru.outofmemory.zelixbackend.entities.miner.MinerEntity;
 import ru.outofmemory.zelixbackend.entities.miner.MinerTaskEntity;
 import ru.outofmemory.zelixbackend.entities.miner.PoolEntity;
+import ru.outofmemory.zelixbackend.entities.templates.PoolTemplateEntity;
+
+import java.util.List;
 
 @Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE, componentModel = "spring")
 public interface ZelixMapper {
+
+    List<PoolTemplateDto> toPoolTemplateDto(List<PoolTemplateEntity> poolTemplateEntities);
+
+    PoolTemplateEntity toPoolTemplateEntity(PoolTemplateDto poolTemplateDto);
+    @AfterMapping
+    default void linkPools(@MappingTarget PoolTemplateEntity poolTemplateEntity) {
+        poolTemplateEntity.getPools().forEach(pool -> pool.setTemplate(poolTemplateEntity));
+    }
+
+
+
     ChainEntity toChainEntity(ChainDto chainDto);
     PoolEntity toPoolEntity(PoolDto poolDto);
 

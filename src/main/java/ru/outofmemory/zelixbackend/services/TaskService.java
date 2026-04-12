@@ -3,7 +3,7 @@ package ru.outofmemory.zelixbackend.services;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.outofmemory.zelixbackend.dto.mapper.ZelixMapper;
+import ru.outofmemory.zelixbackend.dto.ZelixMapper;
 import ru.outofmemory.zelixbackend.dto.task.TaskResponseDto;
 import ru.outofmemory.zelixbackend.entities.MonitorEntity;
 import ru.outofmemory.zelixbackend.entities.UserEntity;

@@ -30,18 +30,16 @@ public class MinerHourlyMetricsScheduler {
         List<MinerHourlyMetricsEntity> hashrateHourlyMetricsEntities = minerEntities.stream()
                 .map(minerEntity -> {
                     MinerHourlyMetricsEntity minerHourlyMetricsEntity = new MinerHourlyMetricsEntity();
+                    minerHourlyMetricsEntity.setMiner(minerEntity);
+                    minerHourlyMetricsEntity.setOwner(minerEntity.getOwner());
+                    minerHourlyMetricsEntity.setAlgo(minerEntity.getAlgo());
+                    minerHourlyMetricsEntity.setCreatedAt(Instant.now());
                     if (!minerEntity.getLastReport().isAfter(Instant.now().minus(1, ChronoUnit.MINUTES))) {
-                        minerHourlyMetricsEntity.setMiner(minerEntity);
-                        minerHourlyMetricsEntity.setOwner(minerEntity.getOwner());
-                        minerHourlyMetricsEntity.setAlgo(minerEntity.getAlgo());
                         minerHourlyMetricsEntity.setPower(0);
                         minerHourlyMetricsEntity.setHashrate(0);
 
                         return minerHourlyMetricsEntity;
                     }
-                    minerHourlyMetricsEntity.setMiner(minerEntity);
-                    minerHourlyMetricsEntity.setOwner(minerEntity.getOwner());
-                    minerHourlyMetricsEntity.setAlgo(minerEntity.getAlgo());
                     minerHourlyMetricsEntity.setPower(minerEntity.getPower());
                     minerHourlyMetricsEntity.setHashrate(minerEntity.getRate());
 

@@ -1,10 +1,11 @@
 package ru.outofmemory.zelixbackend.entities.metrics;
 
 import jakarta.persistence.*;
-import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
-import ru.outofmemory.zelixbackend.entities.miner.MinerEntity;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import ru.outofmemory.zelixbackend.entities.UserEntity;
+import ru.outofmemory.zelixbackend.entities.miner.MinerEntity;
 import ru.outofmemory.zelixbackend.utilities.MinerAlgo;
 
 import java.time.Instant;
@@ -26,7 +27,6 @@ public class BaseMinerMetricEntity {
     @JoinColumn(name = "owner_id", nullable = false)
     private UserEntity owner;
 
-    @CreationTimestamp()
     @Column(name = "created_at")
     private Instant createdAt;
 
