@@ -64,7 +64,7 @@ public class MinerService {
         return minerDto;
     }
 
-    public void saveMiners(List<MinerDto> minersDto, UserEntity userEntity, MonitorEntity monitorEntity) {
+    public void saveMiners(UserEntity userEntity, MonitorEntity monitorEntity, List<MinerDto> minersDto) {
         Map<UUID, MinerEntity> minerEntities = minerRepo.findAllByMonitorIdAndOwnerId(monitorEntity.getId(), userEntity.getId())
                 .stream()
                 .collect(Collectors.toMap(MinerEntity::getUuid, minerEntity -> minerEntity));

@@ -1,12 +1,12 @@
 package ru.outofmemory.zelixbackend.components;
 
-import io.jsonwebtoken.io.IOException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.jspecify.annotations.NonNull;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -17,20 +17,21 @@ import ru.outofmemory.zelixbackend.services.JwtService;
 import ru.outofmemory.zelixbackend.services.UserService;
 import tools.jackson.databind.ObjectMapper;
 
+import java.io.IOException;
+
 @Component
 @RequiredArgsConstructor
 public class JwtFilter extends OncePerRequestFilter {
-
     private final JwtService jwtService;
     private final UserService userService;
-    private final ObjectMapper objectMapper = new ObjectMapper();
-
+    private final ObjectMapper objectMapper;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request,
-                                    @NonNull HttpServletResponse response,
-                                    @NonNull FilterChain filterChain)
-            throws ServletException, IOException, java.io.IOException {
+    protected void doFilterInternal(
+            HttpServletRequest request,
+            @NonNull HttpServletResponse response,
+            @NonNull FilterChain filterChain
+    ) throws ServletException, IOException {
 
         String authHeader = request.getHeader("Authorization");
 
@@ -46,18 +47,18 @@ public class JwtFilter extends OncePerRequestFilter {
             if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 UserEntity user = userService.loadUserByUsername(username);
                 if (!jwtService.isTokenValid(token, user)) {
-                    throw new Throwable();
+                    throw new BadCredentialsException("Invalid token");
                 }
                 UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
 
                 SecurityContextHolder.getContext().setAuthentication(auth);
             }
-        } catch (Throwable e) {
+        } catch (Exception e) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.setContentType("application/json");
 
             ErrorResponseDto errorResponseDto = new ErrorResponseDto();
-            errorResponseDto.setMessage("Invalid token");
+            errorResponseDto.setMessage(e.getMessage());
             errorResponseDto.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 
             objectMapper.writeValue(response.getOutputStream(), errorResponseDto);

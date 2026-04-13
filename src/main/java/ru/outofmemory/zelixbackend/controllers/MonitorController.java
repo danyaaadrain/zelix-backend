@@ -2,7 +2,7 @@ package ru.outofmemory.zelixbackend.controllers;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import ru.outofmemory.zelixbackend.dto.monitor.MonitorReportDto;
+import ru.outofmemory.zelixbackend.dto.monitor.ReportRequestDto;
 import ru.outofmemory.zelixbackend.services.MinerService;
 import ru.outofmemory.zelixbackend.services.MonitorService;
 import ru.outofmemory.zelixbackend.services.UserService;
@@ -20,13 +20,13 @@ public class MonitorController {
     @PostMapping("/{monitorUuid}/reports")
     public void report(
             @RequestHeader("X-Api-Token") String apiToken,
-            @RequestBody MonitorReportDto reportRequest,
+            @RequestBody ReportRequestDto reportRequest,
             @PathVariable UUID monitorUuid
     ) {
         var userEntity = userService.findUserByApiKey(apiToken);
         var monitorEntity = monitorService.getMonitorByUuidAndOwnerId(monitorUuid, userEntity.getId());
 
-        monitorService.saveMonitor(monitorEntity, userEntity, reportRequest);
-        minerService.saveMiners(reportRequest.getMiners(), userEntity, monitorEntity);
+        monitorService.saveMonitor(userEntity, monitorEntity, reportRequest.getMonitor());
+        minerService.saveMiners(userEntity, monitorEntity, reportRequest.getMiners());
     }
 }

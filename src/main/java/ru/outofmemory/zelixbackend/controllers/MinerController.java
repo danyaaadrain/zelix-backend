@@ -23,13 +23,13 @@ public class MinerController {
         return minerService.getMinersCards(userEntity, q);
     }
 
-    @DeleteMapping
-    public void deleteMiners(@AuthenticationPrincipal UserEntity userEntity, @RequestBody List<Long> ids) {
-        taskService.createDeleteTask(userEntity, ids);
-    }
-
     @GetMapping("/{id}")
     public MinerDto getMiner(@AuthenticationPrincipal UserEntity userEntity, @PathVariable Long id) {
         return minerService.getMiner(userEntity, id);
+    }
+
+    @DeleteMapping
+    public void deleteMiners(@AuthenticationPrincipal UserEntity userEntity, @RequestBody List<Long> ids) {
+        taskService.createDeleteTask(userEntity, ids);
     }
 }
