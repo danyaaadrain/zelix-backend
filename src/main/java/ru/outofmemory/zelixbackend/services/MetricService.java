@@ -19,6 +19,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @Service
 @Transactional
@@ -54,7 +55,10 @@ public class MetricService {
         statusResponseDto.setTotalMiners(minerRepo.countAllByOwnerId(userEntity.getId()));
         statusResponseDto.setOnlineMiners(minerRepo.countAllByOwnerIdAndLastReportIsAfter(userEntity.getId(), time));
         statusResponseDto.setOfflineMiners(statusResponseDto.getTotalMiners() - statusResponseDto.getOnlineMiners());
-        statusResponseDto.setTotalPowerConsumption(minerRepo.sumPowerByOwnerIdAndLastReportIsAfter(userEntity.getId(), time));
+        statusResponseDto.setTotalPowerConsumption(Objects.requireNonNullElse(
+                minerRepo.sumPowerByOwnerIdAndLastReportIsAfter(userEntity.getId(), time),
+                0.0D
+        ));
         return statusResponseDto;
     }
 }

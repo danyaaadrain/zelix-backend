@@ -7,18 +7,24 @@ import ru.outofmemory.zelixbackend.services.MinerService;
 import ru.outofmemory.zelixbackend.services.MonitorService;
 import ru.outofmemory.zelixbackend.services.UserService;
 
+import java.util.UUID;
+
 @RestController
-@RequestMapping("/api/monitor")
+@RequestMapping("/api/monitors")
 @RequiredArgsConstructor
 public class MonitorController {
     private final MinerService minerService;
     private final MonitorService monitorService;
     private final UserService userService;
 
-    @PostMapping("/report")
-    public void report(@RequestHeader("X-Api-Token") String apiToken, @RequestBody MonitorReportDto reportRequest) {
+    @PostMapping("/{monitorUuid}/reports")
+    public void report(
+            @RequestHeader("X-Api-Token") String apiToken,
+            @RequestBody MonitorReportDto reportRequest,
+            @PathVariable UUID monitorUuid
+    ) {
         var userEntity = userService.findUserByApiKey(apiToken);
-        var monitorEntity = monitorService.getMonitorByUuidAndOwnerId(reportRequest.getMonitorUuid(), userEntity.getId());
+        var monitorEntity = monitorService.getMonitorByUuidAndOwnerId(monitorUuid, userEntity.getId());
 
         monitorService.saveMonitor(monitorEntity, userEntity, reportRequest);
         minerService.saveMiners(reportRequest.getMiners(), userEntity, monitorEntity);

@@ -13,7 +13,7 @@ import ru.outofmemory.zelixbackend.services.JwtService;
 import ru.outofmemory.zelixbackend.services.UserService;
 
 @RestController
-@RequestMapping("/api/user")
+@RequestMapping("/api/users")
 @RequiredArgsConstructor
 public class UserController {
     private final Utilities apiKeyGenerator;
@@ -32,17 +32,15 @@ public class UserController {
         return userResponseDTO;
     }
 
-    @PutMapping("/apikey")
+    @PatchMapping("/me/token")
     public UserResponseDto updateApiKey(@AuthenticationPrincipal UserEntity user) {
         userService.updateApiKey(user, apiKeyGenerator.createApiKey());
         UserResponseDto userResponseDTO = new UserResponseDto();
-        userResponseDTO.setUsername(user.getUsername());
-        userResponseDTO.setEmail(user.getEmail());
         userResponseDTO.setApiKey(user.getApiKey());
         return userResponseDTO;
     }
 
-    @PatchMapping("/password")
+    @PatchMapping("/me/password")
     public AuthResponseDto password(@AuthenticationPrincipal UserEntity user, @RequestBody ChangePasswordRequestDto changePasswordRequestDTO) {
         if (changePasswordRequestDTO.getOldPassword().equals(changePasswordRequestDTO.getNewPassword())) {
             throw new RuntimeException("Новый и старый пароли совпадают");

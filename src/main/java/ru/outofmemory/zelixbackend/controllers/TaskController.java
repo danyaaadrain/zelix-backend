@@ -9,14 +9,17 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/tasks")
+@RequestMapping("/api/monitors")
 @RequiredArgsConstructor
 public class TaskController {
 
     private final TaskService taskService;
 
-    @GetMapping
-    public List<TaskResponseDto> getTasks(@RequestHeader("X-Api-Token") String apiToken, @RequestParam UUID monitorUuid) {
+    @GetMapping("/{monitorUuid}/tasks")
+    public List<TaskResponseDto> getTasks(
+            @RequestHeader("X-Api-Token") String apiToken,
+            @PathVariable UUID monitorUuid
+    ) {
         return taskService.getTasks(apiToken, monitorUuid);
     }
 }
