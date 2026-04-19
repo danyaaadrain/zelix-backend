@@ -12,6 +12,6 @@ public interface PoolTemplateRepo extends JpaRepository<PoolTemplateEntity, Long
     @EntityGraph(attributePaths = {"pools"})
     List<PoolTemplateEntity> findAllByOwnerId(Long ownerId);
     Optional<PoolTemplateEntity> findByOwnerIdAndName(Long ownerId, String name);
-
+    Optional<PoolTemplateEntity> findByOwnerIdAndId(Long ownerId, Long id);
     void deleteAllByOwnerIdAndIdIn(Long ownerId, Collection<Long> ids);
 }

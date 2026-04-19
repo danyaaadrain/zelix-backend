@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.outofmemory.zelixbackend.dto.monitor.ReportRequestDto;
 import ru.outofmemory.zelixbackend.services.MinerService;
 import ru.outofmemory.zelixbackend.services.MonitorService;
+import ru.outofmemory.zelixbackend.services.TaskService;
 import ru.outofmemory.zelixbackend.services.UserService;
 
 import java.util.UUID;
@@ -16,6 +17,7 @@ public class MonitorController {
     private final MinerService minerService;
     private final MonitorService monitorService;
     private final UserService userService;
+    private final TaskService taskService;
 
     @PostMapping("/{monitorUuid}/reports")
     public void report(
@@ -28,5 +30,7 @@ public class MonitorController {
 
         monitorService.saveMonitor(userEntity, monitorEntity, reportRequest.getMonitor());
         minerService.saveMiners(userEntity, monitorEntity, reportRequest.getMiners());
+
+        taskService.deleteCompletedTasks(monitorEntity, reportRequest.getCompletedTasks());
     }
 }

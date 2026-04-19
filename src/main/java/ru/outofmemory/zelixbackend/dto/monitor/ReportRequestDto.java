@@ -4,11 +4,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import ru.outofmemory.zelixbackend.dto.miner.MinerDto;
 
-import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
 public class ReportRequestDto {
     private MonitorDto monitor;
-    private ArrayList<MinerDto> miners;
+    private List<MinerDto> miners;
+    private List<Long> completedTasks;
 }

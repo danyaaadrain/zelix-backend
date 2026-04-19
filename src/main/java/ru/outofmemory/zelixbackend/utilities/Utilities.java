@@ -16,7 +16,7 @@ public class Utilities {
             "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>/?]).{8,}$"
     );
 
-    public boolean isPassowrdValid(String password) {
+    public boolean isPasswordValid(String password) {
         return PASSWORD_PATTERN.matcher(password).matches();
     }
 

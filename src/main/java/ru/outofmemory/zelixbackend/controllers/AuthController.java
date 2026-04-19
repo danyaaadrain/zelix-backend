@@ -58,7 +58,7 @@ public class AuthController {
         userService.findByEmail(request.getEmail()).ifPresent(email -> {
             throw new RuntimeException("Аккаунт с указанной почтой уже существует");
         });
-        if (!utilities.isPassowrdValid(request.getPassword())) {
+        if (!utilities.isPasswordValid(request.getPassword())) {
             throw new RuntimeException("Пароль не удовлетворяет условиям");
         }
         UserEntity userEntity = new UserEntity(request.getUsername(), passwordEncoder.encode(request.getPassword()), request.getEmail());

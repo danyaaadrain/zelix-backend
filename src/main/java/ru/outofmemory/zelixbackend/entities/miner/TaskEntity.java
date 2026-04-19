@@ -14,11 +14,11 @@ import java.time.Instant;
 import java.util.UUID;
 
 @Entity
-@Table(name = "miner_tasks")
+@Table(name = "tasks")
 @Getter
 @Setter
 @NoArgsConstructor
-public class MinerTaskEntity {
+public class TaskEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", nullable = false)

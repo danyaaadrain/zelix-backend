@@ -65,7 +65,7 @@ public class MinerEntity {
     private Set<PoolEntity> pools = new HashSet<>();
 
     @OneToMany(mappedBy = "miner", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<MinerTaskEntity> tasks = new ArrayList<>();
+    private List<TaskEntity> tasks = new ArrayList<>();
 
     @OneToMany(mappedBy = "miner", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MinerHourlyMetricsEntity> hourlyMetrics = new ArrayList<>();

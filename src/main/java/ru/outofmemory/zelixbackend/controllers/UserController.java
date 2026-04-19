@@ -48,7 +48,7 @@ public class UserController {
         if (!passwordEncoder.matches(changePasswordRequestDTO.getOldPassword(), user.getPassword())) {
             throw new RuntimeException("Неверно указан старый пароль");
         }
-        if (!utilities.isPassowrdValid(changePasswordRequestDTO.getNewPassword())) {
+        if (!utilities.isPasswordValid(changePasswordRequestDTO.getNewPassword())) {
             throw new RuntimeException("Новый пароль не удовлетворяет условиям");
         }
         userService.changePassword(user, changePasswordRequestDTO.getNewPassword());

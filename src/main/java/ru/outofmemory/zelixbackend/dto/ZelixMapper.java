@@ -9,7 +9,7 @@ import ru.outofmemory.zelixbackend.dto.task.TaskResponseDto;
 import ru.outofmemory.zelixbackend.dto.template.PoolTemplateDto;
 import ru.outofmemory.zelixbackend.entities.miner.ChainEntity;
 import ru.outofmemory.zelixbackend.entities.miner.MinerEntity;
-import ru.outofmemory.zelixbackend.entities.miner.MinerTaskEntity;
+import ru.outofmemory.zelixbackend.entities.miner.TaskEntity;
 import ru.outofmemory.zelixbackend.entities.miner.PoolEntity;
 import ru.outofmemory.zelixbackend.entities.templates.PoolTemplateEntity;
 
@@ -17,21 +17,18 @@ import java.util.List;
 
 @Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE, componentModel = "spring")
 public interface ZelixMapper {
-
+    PoolTemplateDto toPoolTemplateDto(PoolTemplateEntity poolTemplateEntity);
     List<PoolTemplateDto> toPoolTemplateDto(List<PoolTemplateEntity> poolTemplateEntities);
-
     PoolTemplateEntity toPoolTemplateEntity(PoolTemplateDto poolTemplateDto);
     @AfterMapping
     default void linkPools(@MappingTarget PoolTemplateEntity poolTemplateEntity) {
         poolTemplateEntity.getPools().forEach(pool -> pool.setTemplate(poolTemplateEntity));
     }
 
-
-
     ChainEntity toChainEntity(ChainDto chainDto);
     PoolEntity toPoolEntity(PoolDto poolDto);
 
-    TaskResponseDto toTaskResponseDto(MinerTaskEntity minerTaskEntity);
+    TaskResponseDto toTaskResponseDto(TaskEntity taskEntity);
 
     @Mapping(target = "type", source = "type.name")
     MinerCardDto toMinerCardDto(MinerEntity minerEntity);
@@ -47,7 +44,6 @@ public interface ZelixMapper {
     void updateMiner(MinerDto dto, @MappingTarget MinerEntity entity);
     void updateChain(ChainDto chainDto, @MappingTarget ChainEntity entity);
     void updatePool(PoolDto poolDto, @MappingTarget PoolEntity entity);
-
     @AfterMapping
     default void linkChains(@MappingTarget MinerEntity minerEntity) {
         minerEntity.getChains().forEach(chain -> chain.setMiner(minerEntity));
