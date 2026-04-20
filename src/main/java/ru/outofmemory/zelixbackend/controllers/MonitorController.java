@@ -1,5 +1,6 @@
 package ru.outofmemory.zelixbackend.controllers;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import ru.outofmemory.zelixbackend.dto.monitor.ReportRequestDto;
@@ -22,7 +23,7 @@ public class MonitorController {
     @PostMapping("/{monitorUuid}/reports")
     public void report(
             @RequestHeader("X-Api-Token") String apiToken,
-            @RequestBody ReportRequestDto reportRequest,
+            @Valid @RequestBody ReportRequestDto reportRequest,
             @PathVariable UUID monitorUuid
     ) {
         var userEntity = userService.findUserByApiKey(apiToken);

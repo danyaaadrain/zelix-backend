@@ -1,6 +1,7 @@
 package ru.outofmemory.zelixbackend.controllers;
 
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +18,7 @@ public class TemplateController {
     private final TemplateService templateService;
 
     @PostMapping
-    public void createTemplate(@AuthenticationPrincipal UserEntity user, @RequestBody PoolTemplateDto templateRequestDto) {
+    public void createTemplate(@AuthenticationPrincipal UserEntity user, @Valid @RequestBody PoolTemplateDto templateRequestDto) {
         templateService.createTemplate(user, templateRequestDto);
     }
 

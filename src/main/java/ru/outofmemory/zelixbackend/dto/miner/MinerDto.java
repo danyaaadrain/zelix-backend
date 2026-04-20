@@ -1,5 +1,7 @@
 package ru.outofmemory.zelixbackend.dto.miner;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import ru.outofmemory.zelixbackend.utilities.MinerAlgo;
@@ -15,6 +17,7 @@ public class MinerDto {
     private Long id;
     private String name;
 
+    @NotNull
     private UUID uuid;
     private String ip;
     private String mac;
@@ -29,7 +32,12 @@ public class MinerDto {
     private int power;
     private long uptime;
 
+    @NotNull
+    @Valid
     private Set<ChainDto> chains = new HashSet<>();
+
+    @NotNull
+    @Valid
     private Set<PoolDto> pools = new HashSet<>();
 
     private Boolean online;

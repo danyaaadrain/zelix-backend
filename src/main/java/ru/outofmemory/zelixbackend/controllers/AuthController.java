@@ -1,9 +1,9 @@
 package ru.outofmemory.zelixbackend.controllers;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,35 +31,33 @@ public class AuthController {
     private final Utilities utilities;
 
     @PostMapping("/login")
-    public AuthResponseDto login(@RequestBody AuthRequestDto request) {
+    public AuthResponseDto login(@Valid @RequestBody AuthRequestDto request) {
         try {
-            Authentication authentication = authenticationManager.authenticate(
+            authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
                             request.getUsername(),
                             request.getPassword()
                     )
             );
-
             UserEntity userEntity = userService.findByUsername(request.getUsername()).orElseThrow();
 
             String token = jwtService.generateToken(userEntity, request.isRemember());
             return new AuthResponseDto(token, userEntity.getUsername());
-
         } catch (AuthenticationException e) {
-            throw new IncorrectCredentialsException("Неверный логин или пароль");
+            throw new IncorrectCredentialsException("Invalid username or password");
         }
     }
 
     @PostMapping("/register")
-    public AuthResponseDto register(@RequestBody RegisterRequestDto request) {
+    public AuthResponseDto register(@Valid @RequestBody RegisterRequestDto request) {
         userService.findByUsername(request.getUsername()).ifPresent(user -> {
-            throw new RuntimeException("Аккаунт с указанным логином уже существует");
+            throw new RuntimeException("An account with this username already exists");
         });
         userService.findByEmail(request.getEmail()).ifPresent(email -> {
-            throw new RuntimeException("Аккаунт с указанной почтой уже существует");
+            throw new RuntimeException("An account with this email already exists");
         });
         if (!utilities.isPasswordValid(request.getPassword())) {
-            throw new RuntimeException("Пароль не удовлетворяет условиям");
+            throw new RuntimeException("Password does not meet the requirements");
         }
         UserEntity userEntity = new UserEntity(request.getUsername(), passwordEncoder.encode(request.getPassword()), request.getEmail());
         userService.saveUser(userEntity);

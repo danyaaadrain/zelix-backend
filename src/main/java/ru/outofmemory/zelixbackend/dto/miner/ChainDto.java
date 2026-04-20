@@ -1,5 +1,6 @@
 package ru.outofmemory.zelixbackend.dto.miner;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -8,6 +9,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 public class ChainDto {
+    @NotNull
     private Integer chainId;
     private Integer chipCount;
     private List<Integer> chipTemp;

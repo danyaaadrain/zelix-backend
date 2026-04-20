@@ -1,5 +1,6 @@
 package ru.outofmemory.zelixbackend.controllers;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -36,7 +37,7 @@ public class TaskController {
     @PostMapping("/miners/tasks")
     public void createTasks(
             @AuthenticationPrincipal UserEntity userEntity,
-            @RequestBody TaskRequestDto taskRequestDto
+            @Valid @RequestBody TaskRequestDto taskRequestDto
     ) {
         taskService.createTasks(userEntity, taskRequestDto);
     }

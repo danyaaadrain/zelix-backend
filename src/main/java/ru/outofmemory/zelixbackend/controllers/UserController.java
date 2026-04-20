@@ -1,5 +1,6 @@
 package ru.outofmemory.zelixbackend.controllers;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -41,15 +42,15 @@ public class UserController {
     }
 
     @PatchMapping("/me/password")
-    public AuthResponseDto password(@AuthenticationPrincipal UserEntity user, @RequestBody ChangePasswordRequestDto changePasswordRequestDTO) {
+    public AuthResponseDto password(@AuthenticationPrincipal UserEntity user, @Valid @RequestBody ChangePasswordRequestDto changePasswordRequestDTO) {
         if (changePasswordRequestDTO.getOldPassword().equals(changePasswordRequestDTO.getNewPassword())) {
-            throw new RuntimeException("Новый и старый пароли совпадают");
+            throw new RuntimeException("New password must be different from the old password");
         }
         if (!passwordEncoder.matches(changePasswordRequestDTO.getOldPassword(), user.getPassword())) {
-            throw new RuntimeException("Неверно указан старый пароль");
+            throw new RuntimeException("Old password is incorrect");
         }
         if (!utilities.isPasswordValid(changePasswordRequestDTO.getNewPassword())) {
-            throw new RuntimeException("Новый пароль не удовлетворяет условиям");
+            throw new RuntimeException("New password does not meet the requirements");
         }
         userService.changePassword(user, changePasswordRequestDTO.getNewPassword());
         AuthResponseDto authResponseDTO = new AuthResponseDto();

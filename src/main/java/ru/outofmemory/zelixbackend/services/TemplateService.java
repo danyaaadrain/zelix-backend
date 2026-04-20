@@ -20,10 +20,10 @@ public class TemplateService {
 
     public void createTemplate(UserEntity userEntity, PoolTemplateDto dto) {
         if (dto.getPools().isEmpty() || dto.getPools().size() > 3) {
-            throw new RuntimeException("Шаблон должен иметь от 1 до 3 пулов");
+            throw new RuntimeException("Template must contain from 1 to 3 pools");
         }
         poolTemplateRepo.findByOwnerIdAndName(userEntity.getId(), dto.getName()).ifPresent(poolTemplate -> {
-            throw new RuntimeException("Шаблон с указанным именем уже существует");
+            throw new RuntimeException("A template with this name already exists");
         });
 
         PoolTemplateEntity poolTemplateEntity = zelixMapper.toPoolTemplateEntity(dto);
@@ -36,6 +36,12 @@ public class TemplateService {
     }
 
     public void deleteTemplates(UserEntity userEntity, List<Long> ids) {
+        if (ids == null || ids.isEmpty()) {
+            throw new RuntimeException("No templates were specified for deletion");
+        }
+        if (ids.stream().anyMatch(id -> id == null || id <= 0)) {
+            throw new RuntimeException("Template list contains invalid ids");
+        }
         poolTemplateRepo.deleteAllByOwnerIdAndIdIn(userEntity.getId(), ids);
     }
 
