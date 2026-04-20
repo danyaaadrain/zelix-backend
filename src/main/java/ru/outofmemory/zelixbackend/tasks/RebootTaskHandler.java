@@ -2,7 +2,6 @@ package ru.outofmemory.zelixbackend.tasks;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 import ru.outofmemory.zelixbackend.entities.miner.TaskEntity;
 import ru.outofmemory.zelixbackend.repos.TaskRepo;
 import ru.outofmemory.zelixbackend.utilities.MinerTask;
@@ -11,14 +10,14 @@ import ru.outofmemory.zelixbackend.utilities.TaskStatus;
 import java.util.List;
 
 @Component
-@Transactional
 @RequiredArgsConstructor
-public class DeleteTaskHandler implements ITaskHandler {
+public class RebootTaskHandler implements ITaskHandler {
+
     private final TaskRepo taskRepo;
 
     @Override
     public MinerTask getType() {
-        return MinerTask.DELETE;
+        return MinerTask.REBOOT;
     }
 
     @Override

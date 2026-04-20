@@ -9,6 +9,7 @@ import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 import ru.outofmemory.zelixbackend.entities.MonitorEntity;
 import ru.outofmemory.zelixbackend.utilities.MinerTask;
+import ru.outofmemory.zelixbackend.utilities.TaskStatus;
 
 import java.time.Instant;
 import java.util.UUID;
@@ -41,6 +42,9 @@ public class TaskEntity {
 
     @Enumerated(EnumType.STRING)
     private MinerTask task;
+
+    @Enumerated(EnumType.STRING)
+    private TaskStatus status;
 
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(columnDefinition = "jsonb")

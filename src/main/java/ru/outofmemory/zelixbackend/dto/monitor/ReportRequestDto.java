@@ -2,10 +2,10 @@ package ru.outofmemory.zelixbackend.dto.monitor;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import ru.outofmemory.zelixbackend.dto.miner.MinerDto;
+import ru.outofmemory.zelixbackend.dto.task.TaskStatusDto;
 
 import java.util.List;
 
@@ -20,5 +20,5 @@ public class ReportRequestDto {
     @Valid
     private List<MinerDto> miners;
 
-    private List<@Positive Long> completedTasks;
+    private List<TaskStatusDto> tasks;
 }

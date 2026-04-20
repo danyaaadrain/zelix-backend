@@ -23,7 +23,7 @@ public class TaskController {
             @RequestHeader("X-Api-Token") String apiToken,
             @PathVariable UUID monitorUuid
     ) {
-        return taskService.getTasksByMonitor(apiToken, monitorUuid);
+        return taskService.getCreatedTasksByMonitor(apiToken, monitorUuid);
     }
 
     @GetMapping("/miners/{id}/tasks")

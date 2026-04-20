@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.outofmemory.zelixbackend.dto.ZelixMapper;
 import ru.outofmemory.zelixbackend.dto.task.TaskRequestDto;
 import ru.outofmemory.zelixbackend.dto.task.TaskResponseDto;
+import ru.outofmemory.zelixbackend.dto.task.TaskStatusDto;
 import ru.outofmemory.zelixbackend.entities.MonitorEntity;
 import ru.outofmemory.zelixbackend.entities.UserEntity;
 import ru.outofmemory.zelixbackend.entities.miner.MinerEntity;
@@ -16,6 +17,7 @@ import ru.outofmemory.zelixbackend.repos.TaskRepo;
 import ru.outofmemory.zelixbackend.tasks.TaskRegistry;
 import ru.outofmemory.zelixbackend.tasks.TasksWrapper;
 import ru.outofmemory.zelixbackend.utilities.MinerTask;
+import ru.outofmemory.zelixbackend.utilities.TaskStatus;
 
 import java.util.HashSet;
 import java.util.List;
@@ -34,19 +36,25 @@ public class TaskService {
     private final ZelixMapper zelixMapper;
     private final TaskRegistry taskRegistry;
 
-    public void deleteCompletedTasks(MonitorEntity monitorEntity, List<Long> completedTasks) {
+    public void updateTasks(MonitorEntity monitorEntity, List<TaskStatusDto> completedTasks) {
         if (completedTasks == null || completedTasks.isEmpty()) {
             return;
         }
-        taskRepo.deleteAllByMonitorIdAndIdIn(monitorEntity.getId(), completedTasks);
+        List<TaskEntity> taskEntities = taskRepo.findAllByMonitorId(monitorEntity.getId());
+        taskEntities.forEach(taskEntity -> completedTasks.stream()
+                .filter(task -> task.getId().equals(taskEntity.getId()))
+                .findFirst()
+                .ifPresent(completedTask -> taskEntity.setStatus(completedTask.getStatus()))
+        );
+        taskRepo.saveAll(taskEntities);
     }
 
-    public List<TaskResponseDto> getTasksByMonitor(String apiToken, UUID monitorUuid) {
+    public List<TaskResponseDto> getCreatedTasksByMonitor(String apiToken, UUID monitorUuid) {
         UserEntity userEntity = userService.findUserByApiKey(apiToken);
         MonitorEntity monitorEntity = monitorRepo.findByIdAndOwnerId(monitorUuid, userEntity.getId()).orElseThrow(() ->
                 new RuntimeException("Invalid monitor UUID")
         );
-        List<TaskEntity> minerTaskEntities = taskRepo.findAllByMonitorId(monitorEntity.getId());
+        List<TaskEntity> minerTaskEntities = taskRepo.findAllByMonitorIdAndStatus(monitorEntity.getId(), TaskStatus.CREATED);
 
         return minerTaskEntities.stream().map(zelixMapper::toTaskResponseDto).toList();
     }

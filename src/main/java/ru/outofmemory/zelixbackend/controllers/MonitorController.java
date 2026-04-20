@@ -32,6 +32,6 @@ public class MonitorController {
         monitorService.saveMonitor(userEntity, monitorEntity, reportRequest.getMonitor());
         minerService.saveMiners(userEntity, monitorEntity, reportRequest.getMiners());
 
-        taskService.deleteCompletedTasks(monitorEntity, reportRequest.getCompletedTasks());
+        taskService.updateTasks(monitorEntity, reportRequest.getTasks());
     }
 }

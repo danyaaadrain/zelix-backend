@@ -9,6 +9,7 @@ import ru.outofmemory.zelixbackend.entities.templates.PoolTemplateEntity;
 import ru.outofmemory.zelixbackend.repos.TaskRepo;
 import ru.outofmemory.zelixbackend.services.TemplateService;
 import ru.outofmemory.zelixbackend.utilities.MinerTask;
+import ru.outofmemory.zelixbackend.utilities.TaskStatus;
 import tools.jackson.databind.ObjectMapper;
 
 import java.util.List;
@@ -39,6 +40,7 @@ public class SetPoolsTaskHandler implements ITaskHandler {
             taskEntity.setMinerUuid(miner.getUuid());
             taskEntity.setMonitor(miner.getMonitor());
             taskEntity.setTask(tasksWrapper.getTask());
+            taskEntity.setStatus(TaskStatus.CREATED);
 
             PoolTemplateDto poolTemplateDto = zelixMapper.toPoolTemplateDto(poolTemplateEntity);
             String name;
