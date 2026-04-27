@@ -20,6 +20,7 @@ public interface ZelixMapper {
     PoolTemplateDto toPoolTemplateDto(PoolTemplateEntity poolTemplateEntity);
     List<PoolTemplateDto> toPoolTemplateDto(List<PoolTemplateEntity> poolTemplateEntities);
     PoolTemplateEntity toPoolTemplateEntity(PoolTemplateDto poolTemplateDto);
+    void updatePoolTemplate(PoolTemplateDto poolTemplateDto, @MappingTarget PoolTemplateEntity poolTemplateEntity);
     @AfterMapping
     default void linkPools(@MappingTarget PoolTemplateEntity poolTemplateEntity) {
         poolTemplateEntity.getPools().forEach(pool -> pool.setTemplate(poolTemplateEntity));

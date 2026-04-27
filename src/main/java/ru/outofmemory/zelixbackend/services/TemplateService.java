@@ -50,4 +50,14 @@ public class TemplateService {
                 new RuntimeException("Invalid template Id")
         );
     }
+
+    public void editTemplate(UserEntity userEntity, PoolTemplateDto dto) {
+        if (dto.getPools().isEmpty() || dto.getPools().size() > 3) {
+            throw new RuntimeException("Template must contain from 1 to 3 pools");
+        }
+
+        PoolTemplateEntity poolTemplateEntity = findByOwnerIdAndId(userEntity.getId(), dto.getId());
+        zelixMapper.updatePoolTemplate(dto, poolTemplateEntity);
+        poolTemplateRepo.save(poolTemplateEntity);
+    }
 }

@@ -17,18 +17,23 @@ import java.util.List;
 public class TemplateController {
     private final TemplateService templateService;
 
-    @PostMapping
-    public void createTemplate(@AuthenticationPrincipal UserEntity user, @Valid @RequestBody PoolTemplateDto templateRequestDto) {
-        templateService.createTemplate(user, templateRequestDto);
-    }
-
     @GetMapping
     public List<PoolTemplateDto> getTemplates(@AuthenticationPrincipal UserEntity user) {
         return templateService.getTemplates(user);
     }
 
+    @PostMapping
+    public void createTemplate(@AuthenticationPrincipal UserEntity user, @Valid @RequestBody PoolTemplateDto templateRequestDto) {
+        templateService.createTemplate(user, templateRequestDto);
+    }
+
     @DeleteMapping
     public void deleteTemplates(@AuthenticationPrincipal UserEntity user, @RequestBody List<Long> ids) {
         templateService.deleteTemplates(user, ids);
+    }
+
+    @PatchMapping
+    public void editTemplate(@AuthenticationPrincipal UserEntity user, @RequestBody PoolTemplateDto templateRequestDto) {
+        templateService.editTemplate(user, templateRequestDto);
     }
 }
