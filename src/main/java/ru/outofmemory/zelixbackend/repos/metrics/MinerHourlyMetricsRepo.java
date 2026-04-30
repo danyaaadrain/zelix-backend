@@ -12,6 +12,8 @@ public interface MinerHourlyMetricsRepo extends JpaRepository<MinerHourlyMetrics
 
     List<MinerHourlyMetricsEntity> findAllByOwnerIdAndAlgo(Long id, MinerAlgo algo);
 
+    List<MinerHourlyMetricsEntity> findAllByOwnerIdAndMinerId(Long ownerId, Long minerId);
+
     List<MinerHourlyMetricsEntity> findAllByOwnerId(Long id);
 }
 

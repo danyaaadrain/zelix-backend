@@ -3,6 +3,7 @@ package ru.outofmemory.zelixbackend.dto.chart;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import ru.outofmemory.zelixbackend.utilities.ChartType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +12,8 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ChartSeries {
-    List<Double> points = new ArrayList<>();
+    private ChartType type;
+    private List<Double> points = new ArrayList<>();
     private Double min;
     private Double max;
     private String label;

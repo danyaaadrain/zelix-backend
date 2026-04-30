@@ -61,7 +61,7 @@ public class TaskService {
 
     public List<TaskResponseDto> getTasksByMiner(UserEntity userEntity, Long id) {
         MinerEntity minerEntity = minerRepo.findByIdAndOwnerId(id, userEntity.getId()).orElseThrow(() ->
-                new RuntimeException("Invalid miner Id")
+                new RuntimeException("Miner with id=" + id + " not found")
         );
 
         List<TaskEntity> minerTaskEntities = taskRepo.findAllByMinerId(minerEntity.getId());

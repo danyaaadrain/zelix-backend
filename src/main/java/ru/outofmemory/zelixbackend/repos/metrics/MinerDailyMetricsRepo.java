@@ -11,7 +11,7 @@ public interface MinerDailyMetricsRepo extends JpaRepository<MinerDailyMetricsEn
     void deleteByCreatedAtBefore(Instant instant);
 
     List<MinerDailyMetricsEntity> findAllByOwnerIdAndAlgo(Long id, MinerAlgo algo);
-
+    List<MinerDailyMetricsEntity> findAllByOwnerIdAndId(Long ownerId, Long minerId);
     List<MinerDailyMetricsEntity> findAllByOwnerId(Long id);
 }
 

@@ -21,7 +21,7 @@ public class MetricController {
     }
 
     @GetMapping("/miners/{id}/metrics")
-    public ChartDto chartById(@AuthenticationPrincipal UserEntity userEntity, @PathVariable String id) {
-        return new ChartDto();
+    public ChartDto chartById(@AuthenticationPrincipal UserEntity userEntity, @PathVariable Long id) {
+        return chartService.createMinerDailyChart(userEntity, id);
     }
 }

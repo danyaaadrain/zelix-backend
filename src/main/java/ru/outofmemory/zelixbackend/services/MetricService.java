@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.outofmemory.zelixbackend.dto.status.StatusResponseDto;
 import ru.outofmemory.zelixbackend.entities.UserEntity;
 import ru.outofmemory.zelixbackend.entities.metrics.BaseMinerMetricEntity;
+import ru.outofmemory.zelixbackend.entities.metrics.MinerHourlyMetricsEntity;
 import ru.outofmemory.zelixbackend.repos.MinerRepo;
 import ru.outofmemory.zelixbackend.repos.metrics.MinerDailyMetricsRepo;
 import ru.outofmemory.zelixbackend.repos.metrics.MinerHourlyMetricsRepo;
@@ -29,12 +30,15 @@ public class MetricService {
     private final MinerDailyMetricsRepo minerDailyMetricsRepo;
     private final MinerRepo minerRepo;
 
-
     public List<BaseMinerMetricEntity> findAllByUserAndAlgo(UserEntity userEntity, ChartPeriod period, MinerAlgo algo) {
         return switch (period) {
             case HOURLY -> new ArrayList<>(minerHourlyMetricsRepo.findAllByOwnerIdAndAlgo(userEntity.getId(), algo));
             case DAILY -> new ArrayList<>(minerDailyMetricsRepo.findAllByOwnerIdAndAlgo(userEntity.getId(), algo));
         };
+    }
+
+    public List<MinerHourlyMetricsEntity> findDailyByUserAndMinerId(UserEntity userEntity, Long id) {
+        return minerHourlyMetricsRepo.findAllByOwnerIdAndMinerId(userEntity.getId(), id);
     }
 
     public double countAverageHashrate(Map<Instant, List<BaseMinerMetricEntity>> metricsByTime) {

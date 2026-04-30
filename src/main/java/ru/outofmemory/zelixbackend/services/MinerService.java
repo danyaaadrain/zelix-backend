@@ -34,7 +34,7 @@ public class MinerService {
         if (q != null) {
             Long id = null;
             try {
-                id =  Long.parseLong(q);
+                id = Long.parseLong(q);
             } catch (Exception ignored) {
 
             }
@@ -42,7 +42,6 @@ public class MinerService {
         } else {
             minerEntities = minerRepo.findAllByOwnerId(userEntity.getId());
         }
-
 
         return minerEntities.stream().map(minerEntity -> {
             MinerCardDto minerCardDto = zelixMapper.toMinerCardDto(minerEntity);
@@ -56,8 +55,14 @@ public class MinerService {
         }).toList();
     }
 
+    public MinerEntity findMinerByUserAndId(UserEntity userEntity, Long id) {
+        return minerRepo.findByIdAndOwnerId(id, userEntity.getId()).orElseThrow(() ->
+                new RuntimeException("Miner with id=" + id + " not found")
+        );
+    }
+
     public MinerDto getMiner(UserEntity userEntity, Long id) {
-        MinerEntity minerEntity = minerRepo.findByIdAndOwnerId(id, userEntity.getId()).orElseThrow(() -> new RuntimeException("Miner with id=" + id + " not found"));
+        MinerEntity minerEntity = findMinerByUserAndId(userEntity, id);
         MinerDto minerDto = zelixMapper.toMinerDto(minerEntity);
         minerDto.setOnline(minerEntity.getLastReport().isAfter(Instant.now().minus(1, ChronoUnit.MINUTES)));
 
