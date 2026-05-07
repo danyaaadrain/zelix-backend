@@ -15,6 +15,6 @@ public enum ChartType {
     private final double min;
     private final double max;
 
-    private final double minSolo;
-    private final double maxSolo;
+    private final double minSingle;
+    private final double maxSingle;
 }

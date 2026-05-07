@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import ru.outofmemory.zelixbackend.dto.chart.ChartDto;
 import ru.outofmemory.zelixbackend.dto.chart.ChartSeries;
 import ru.outofmemory.zelixbackend.entities.UserEntity;
-import ru.outofmemory.zelixbackend.entities.metrics.BaseMinerMetricEntity;
+import ru.outofmemory.zelixbackend.entities.metrics.MinerMetricEntity;
 import ru.outofmemory.zelixbackend.entities.metrics.MinerHourlyMetricsEntity;
 import ru.outofmemory.zelixbackend.entities.miner.MinerEntity;
 import ru.outofmemory.zelixbackend.repos.MinerRepo;
@@ -31,9 +31,9 @@ public class ChartService {
 
     public ChartDto createMinersChart(UserEntity userEntity, MinerAlgo algo, ChartPeriod period) {
         ChartDto chartDto = new ChartDto();
-        List<BaseMinerMetricEntity> minerMetricEntities = metricService.findAllByUserAndAlgo(userEntity, period, algo);
+        List<MinerMetricEntity> minerMetricEntities = metricService.findAllByUserAndAlgo(userEntity, period, algo);
 
-        Map<Instant, List<BaseMinerMetricEntity>> metricsByTime = minerMetricEntities.stream()
+        Map<Instant, List<MinerMetricEntity>> metricsByTime = minerMetricEntities.stream()
                 .collect(Collectors.groupingBy(
                         e -> e.getCreatedAt().truncatedTo(ChronoUnit.MINUTES),
                         TreeMap::new,
@@ -43,30 +43,12 @@ public class ChartService {
                 userEntity.getId(),
                 algo,
                 Instant.now().minus(1, ChronoUnit.MINUTES));
+
         chartDto.setCurrentHashrate(Objects.requireNonNullElse(currentHashrate, 0.0));
-        chartDto.setUnit(algo.getUnit());
         chartDto.setTimePoints(metricsByTime.keySet());
 
-        //chartDto.getSeries().add(buildSeries(ChartType.HASHRATE, metricsByTime, BaseMinerMetricEntity::getHashrate, algo.getUnit()));
-        //chartDto.getSeries().add(buildSeries(ChartType.POWER, metricsByTime, BaseMinerMetricEntity::getPower, ChartType.POWER.getUnit()));
-
-
-        chartDto.getSeries().add(buildSeries(
-                ChartType.HASHRATE,
-                metricsByTime,
-                BaseMinerMetricEntity::getHashrate,
-                algo.getUnit(),
-                ChartType.HASHRATE.getMin(),
-                ChartType.HASHRATE.getMax()
-        ));
-        chartDto.getSeries().add(buildSeries(
-                ChartType.POWER,
-                metricsByTime,
-                BaseMinerMetricEntity::getPower,
-                ChartType.POWER.getUnit(),
-                ChartType.POWER.getMin(),
-                ChartType.POWER.getMax()
-        ));
+        chartDto.getSeries().add(buildSeries(ChartType.HASHRATE, metricsByTime, MinerMetricEntity::getHashrate, algo.getUnit(), false));
+        chartDto.getSeries().add(buildSeries(ChartType.POWER, metricsByTime, MinerMetricEntity::getPower, ChartType.POWER.getUnit(), false));
 
         return chartDto;
     }
@@ -76,47 +58,34 @@ public class ChartService {
         MinerEntity minerEntity = minerService.findMinerByUserAndId(userEntity, id);
         List<MinerHourlyMetricsEntity> minerDailyMetrics = metricService.findDailyByUserAndMinerId(userEntity, id);
 
-        Map<Instant, List<BaseMinerMetricEntity>> metricsByTime = minerDailyMetrics.stream()
+        Map<Instant, List<MinerMetricEntity>> metricsByTime = minerDailyMetrics.stream()
                 .collect(Collectors.groupingBy(
                         e -> e.getCreatedAt().truncatedTo(ChronoUnit.MINUTES),
                         TreeMap::new,
                         Collectors.toList()));
 
-        chartDto.setUnit(minerEntity.getRateUnit());
         chartDto.setTimePoints(metricsByTime.keySet());
 
-        chartDto.getSeries().add(buildSeries(
-                ChartType.HASHRATE,
-                metricsByTime,
-                BaseMinerMetricEntity::getHashrate,
-                minerEntity.getRateUnit(),
-                ChartType.HASHRATE.getMinSolo(),
-                ChartType.HASHRATE.getMaxSolo()
-        ));
-        chartDto.getSeries().add(buildSeries(
-                ChartType.POWER,
-                metricsByTime,
-                BaseMinerMetricEntity::getPower,
-                ChartType.POWER.getUnit(),
-                ChartType.POWER.getMinSolo(),
-                ChartType.POWER.getMaxSolo()
-        ));
+        chartDto.getSeries().add(buildSeries(ChartType.HASHRATE, metricsByTime, MinerMetricEntity::getHashrate, minerEntity.getRateUnit(), true));
+        chartDto.getSeries().add(buildSeries(ChartType.POWER, metricsByTime, MinerMetricEntity::getPower, ChartType.POWER.getUnit(), true));
 
         return chartDto;
     }
 
     private ChartSeries buildSeries(
             ChartType chartType,
-            Map<Instant, List<BaseMinerMetricEntity>> metricsByTime,
-            ToDoubleFunction<BaseMinerMetricEntity> function,
+            Map<Instant, List<MinerMetricEntity>> metricsByTime,
+            ToDoubleFunction<MinerMetricEntity> function,
             String unit,
-            double min,
-            double max
+            boolean single
     ) {
         ChartSeries chartSeries = new ChartSeries();
         metricsByTime.forEach((time, metrics) ->
                 chartSeries.addPoint(metrics.stream().mapToDouble(function).sum())
         );
+        double min = single ? chartType.getMinSingle() : chartType.getMin();
+        double max = single ? chartType.getMaxSingle() : chartType.getMax();
+
         chartSeries.setType(chartType);
         chartSeries.setMin(chartSeries.getPoints().stream().mapToDouble(Number::doubleValue).min().orElse(0.0) * min);
         chartSeries.setMax(chartSeries.getPoints().stream().mapToDouble(Number::doubleValue).max().orElse(0.0) * max);

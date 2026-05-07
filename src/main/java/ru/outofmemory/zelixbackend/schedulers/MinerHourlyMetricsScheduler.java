@@ -41,7 +41,7 @@ public class MinerHourlyMetricsScheduler {
                         return minerHourlyMetricsEntity;
                     }
                     minerHourlyMetricsEntity.setPower(minerEntity.getPower());
-                    minerHourlyMetricsEntity.setHashrate(minerEntity.getRate());
+                    minerHourlyMetricsEntity.setHashrate(minerEntity.getRateAvg());
 
                     return minerHourlyMetricsEntity;
                 }).toList();

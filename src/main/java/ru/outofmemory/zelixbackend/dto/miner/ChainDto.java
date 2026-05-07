@@ -12,6 +12,7 @@ public class ChainDto {
     @NotNull
     private Integer chainId;
     private Integer chipCount;
+    private Double rate;
     private List<Integer> chipTemp;
     private String chipStatus;
     private Integer pcbMin;

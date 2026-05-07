@@ -23,6 +23,9 @@ public class ChainEntity {
     @Column(name = "chip_count")
     private Integer chipCount;
 
+    @Column(name = "rate")
+    private Double rate;
+
     @Column(name = "chip_temp")
     private List<Integer> chipTemp;
 

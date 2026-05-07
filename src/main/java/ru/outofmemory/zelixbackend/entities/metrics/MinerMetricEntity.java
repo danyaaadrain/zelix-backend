@@ -14,7 +14,7 @@ import java.time.Instant;
 @Getter
 @Setter
 @NoArgsConstructor
-public class BaseMinerMetricEntity {
+public class MinerMetricEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

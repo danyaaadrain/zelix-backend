@@ -14,6 +14,5 @@ public class ChartDto {
     Set<Instant> timePoints;
     private Double averageHashrate;
     private Double currentHashrate;
-    private String unit;
     private List<ChartSeries> series = new ArrayList<>();
 }

@@ -5,6 +5,6 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "hashrate_hourly_metrics")
-public class MinerHourlyMetricsEntity extends BaseMinerMetricEntity {
+public class MinerHourlyMetricsEntity extends MinerMetricEntity {
 
 }

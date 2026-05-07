@@ -38,20 +38,27 @@ public class MinerDailyMetricsScheduler {
                 hashrateHourlyMetricsEntities.stream().collect(Collectors.groupingBy(MinerHourlyMetricsEntity::getMiner));
 
         byMiner.forEach((minerEntity, metrics) -> {
-            MinerDailyMetricsEntity minerDailyMetricsEntity = new MinerDailyMetricsEntity();
-            minerDailyMetricsEntity.setMiner(minerEntity);
-            minerDailyMetricsEntity.setOwner(minerEntity.getOwner());
-            minerDailyMetricsEntity.setAlgo(minerEntity.getAlgo());
-            minerDailyMetricsEntity.setPower(minerEntity.getPower());
-            minerDailyMetricsEntity.setCreatedAt(Instant.now());
+            MinerDailyMetricsEntity minerMetricsEntity = new MinerDailyMetricsEntity();
+            minerMetricsEntity.setMiner(minerEntity);
+            minerMetricsEntity.setOwner(minerEntity.getOwner());
+            minerMetricsEntity.setAlgo(minerEntity.getAlgo());
+            minerMetricsEntity.setPower(minerEntity.getPower());
+            minerMetricsEntity.setCreatedAt(Instant.now());
 
-            double avg = metrics.stream()
+
+            double powerAvg = metrics.stream()
+                    .mapToInt(MinerHourlyMetricsEntity::getPower)
+                    .average()
+                    .orElse(0);
+
+            double rateAvg = metrics.stream()
                     .mapToDouble(MinerHourlyMetricsEntity::getHashrate)
                     .average()
-                    .orElse(0.0);
+                    .orElse(0);
 
-            minerDailyMetricsEntity.setHashrate(BigDecimal.valueOf(avg).setScale(2, RoundingMode.HALF_UP).doubleValue());
-            hashrateDailyMetricsEntities.add(minerDailyMetricsEntity);
+            minerMetricsEntity.setHashrate(BigDecimal.valueOf(rateAvg).setScale(2, RoundingMode.HALF_UP).doubleValue());
+            minerMetricsEntity.setPower(BigDecimal.valueOf(powerAvg).setScale(0, RoundingMode.DOWN).intValue());
+            hashrateDailyMetricsEntities.add(minerMetricsEntity);
         });
 
         minerDailyMetricsRepo.saveAll(hashrateDailyMetricsEntities);
